@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/translationCoreApps/tc-tool.svg?branch=master)](https://travis-ci.org/translationCoreApps/tc-tool)
+[![codecov](https://codecov.io/gh/translationCoreApps/tc-tool/branch/master/graph/badge.svg)](https://codecov.io/gh/translationCoreApps/tc-tool)
+
 # tC Tool
 
 This module provides an interface for connecting custom apps/tools
