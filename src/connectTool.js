@@ -6,27 +6,39 @@ import {loadLocalization} from './state/actions/locale';
 import {setActiveLanguage} from 'react-localize-redux';
 import BrokenScreen from './BrokenScreen';
 import {getTranslate, getLocaleLoaded} from './state/reducers';
+import fs from 'fs-extra';
 
 /**
  * This HOC initializes a store and locale for the tool.
  * It also specifies some required properties common to all tools.
  *
  * @param {string} toolId - the tool's unique id. Used for storing the redux store in the react context.
- * @param {string} localeDir - directory containing the interface locale files
+ * @param {string} [localeDir] - directory containing the interface locale files
  * @return {function(*)}
  */
-export const connectTool = (toolId, localeDir) => {
+const connectTool = (toolId, localeDir) => {
+  if(typeof toolId !== 'string') {
+    throw Error(`Invalid parameter. Expected toolId to be a string but found ${typeof toolId} instead`);
+  }
+    if(localeDir && typeof localeDir !== 'string') {
+        throw Error(`Invalid parameter. Expected localeDir to be a string but found ${typeof localeDir} instead`);
+    }
+
   return (WrappedComponent) => {
+    const hasLocale = localeDir && fs.existsSync(localeDir);
+    if(!hasLocale) {
+      console.warn('No locale found. You should consider localizing this tool.');
+    }
 
     /**
      * This container sets up the tool environment.
      *
      * @property {string} appLanguage - the app interface language code
      */
-    class ConnectedTool extends React.Component {
+    class Tool extends React.Component {
       constructor(props) {
         super(props);
-        this._isLocaleLoaded = this._isLocaleLoaded.bind(this);
+        this._isLoaded = this._isLoaded.bind(this);
         this.state = {
           broken: false,
           error: null,
@@ -37,7 +49,9 @@ export const connectTool = (toolId, localeDir) => {
       componentWillMount() {
         const {appLanguage} = this.props;
         this.store = configureStore();
-        this.store.dispatch(loadLocalization(localeDir, appLanguage));
+        if(hasLocale) {
+            this.store.dispatch(loadLocalization(localeDir, appLanguage));
+        }
         this.Provider = createProvider(toolId);
         this.unsubscribe = this.store.subscribe(this.handleChange.bind(this));
       }
@@ -60,7 +74,7 @@ export const connectTool = (toolId, localeDir) => {
 
       componentWillReceiveProps(nextProps) {
         // stay in sync with the application language
-        if(nextProps.appLanguage !== this.props.appLanguage) {
+        if(hasLocale && nextProps.appLanguage !== this.props.appLanguage) {
           this.store.dispatch(setActiveLanguage(nextProps.appLanguage));
         }
       }
@@ -70,8 +84,9 @@ export const connectTool = (toolId, localeDir) => {
        * @return {bool}
        * @private
        */
-      _isLocaleLoaded() {
-        return getLocaleLoaded(this.store.getState());
+      _isLoaded() {
+        // TRICKY: if locale doesn't exist skip to finished loading
+        return !hasLocale || getLocaleLoaded(this.store.getState());
       }
 
       /**
@@ -81,7 +96,10 @@ export const connectTool = (toolId, localeDir) => {
        */
       _getBrokenScreen() {
         const {broken, error, info} = this.state;
-        const translate = getTranslate(this.store.getState());
+        let translate = k => k;
+        if(hasLocale) {
+            translate = getTranslate(this.store.getState());
+        }
         if(broken) {
           // TODO: log the error to the core app state so it will be included in feedback logs.
           // it would be best to pass a callback into this component for this purpose.
@@ -109,7 +127,7 @@ export const connectTool = (toolId, localeDir) => {
       }
 
       render() {
-        if(!this._isLocaleLoaded()) {
+        if(!this._isLoaded()) {
           // TODO: we could display a loading screen while the locale loads
           return null;
         }
@@ -118,9 +136,13 @@ export const connectTool = (toolId, localeDir) => {
         if(brokenScreen) {
           return brokenScreen;
         } else {
+          let translate = undefined;
+          if(hasLocale) {
+            translate = getTranslate(this.store.getState());
+          }
           return this._connectProvider(
             <WrappedComponent
-              translate={getTranslate(this.store.getState())}
+              translate={translate}
               {...this.props}
             />
           );
@@ -131,12 +153,14 @@ export const connectTool = (toolId, localeDir) => {
     /**
      * This effectively defines the interface between tools and tC core.
      */
-    ConnectedTool.propTypes = {
+    Tool.propTypes = {
       currentToolViews: PropTypes.object.isRequired,
       resourcesReducer: PropTypes.object.isRequired,
       contextIdReducer: PropTypes.object.isRequired,
       appLanguage: PropTypes.string.isRequired
     };
-    return ConnectedTool;
+    return Tool;
   };
 };
+
+export default connectTool;

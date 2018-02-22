@@ -1,4 +1,4 @@
-import { connectTool } from './Tool';
+import connectTool from './connectTool';
 import { createConnect } from './state/store';
 import { getTranslate } from './state/reducers';
 
