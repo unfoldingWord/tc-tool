@@ -1,0 +1,19 @@
+{
+  "name": "tc-tool",
+  "version": "1.0.0",
+  "description": "A HOC that interfaces tools with the tC core",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint ./src && jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/translationCoreApps/tc-tool.git"
+  },
+  "author": "unfoldingWord <info@unfoldingword.org>",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/translationCoreApps/tc-tool/issues"
+  },
+  "homepage": "https://github.com/translationCoreApps/tc-tool#readme"
+}
