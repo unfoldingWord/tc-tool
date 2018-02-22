@@ -96,14 +96,14 @@ const connectTool = (toolId, localeDir) => {
        */
       _getBrokenScreen() {
         const {broken, error, info} = this.state;
-        let translate = k => k;
-        if(hasLocale) {
-            translate = getTranslate(this.store.getState());
-        }
         if(broken) {
           // TODO: log the error to the core app state so it will be included in feedback logs.
           // it would be best to pass a callback into this component for this purpose.
-          return <BrokenScreen title={translate('tool_broken')}
+
+          // TRICKY: we don't want to rely on tools localizing the title of the error page.
+          // so we'll assume most people understand that "error" and some cryptic stack trace
+          // means things broke.
+          return <BrokenScreen title="ERROR"
                                error={error}
                                info={info}/>;
         } else {

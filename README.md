@@ -71,3 +71,4 @@ export default connect(mapStateToProps)(SubComponent);
 
 * **state** - Adds a scoped redux store to the component.
 * **localization** - Loads the tool locale and provides a translate tool to the component.
+* **error boundary** - A semi-user-friendly error screen is displayed if an error occurs. This allows users to navigate to a safe part of the app.
