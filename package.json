@@ -1,7 +1,7 @@
 {
-  "name": "tc-tool",
+  "name": "@unfoldingword/tc-tool",
   "version": "1.0.0",
-  "description": "A HOC that interfaces tools with the tC core",
+  "description": "A HOC that provides a tool interface with the tC core",
   "main": "dist/index.js",
   "scripts": {
     "test": "eslint ./src && jest",
@@ -29,6 +29,7 @@
   "homepage": "https://github.com/translationCoreApps/tc-tool#readme",
   "dependencies": {
     "fs-extra": "^4.0.3",
+    "lodash": "^4.17.5",
     "prop-types": "^15.6.0",
     "react-localize-redux": "^2.15.1",
     "redux-logger": "^3.0.6",
@@ -50,7 +51,6 @@
     "eslint-plugin-jest": "^21.12.2",
     "eslint-plugin-react": "^7.7.0",
     "jest": "^22.4.0",
-    "lodash": "^4.17.5",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.7",
