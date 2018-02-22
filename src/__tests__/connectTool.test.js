@@ -4,6 +4,8 @@ import {mount, configure} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import path from 'path';
 
+jest.mock('../state/actions/locale');
+
 class TestComponent extends React.Component {
     render() {
         return (
@@ -28,8 +30,9 @@ test('without locale', () => {
                             contextIdReducer={{}}
                             appLanguage="en_US"/>
     );
-    expect(wrapper.props().appLanguage).toEqual('en_US'); 
-    expect(wrapper.props().translate).not.toBeDefined();
+    const component = wrapper.find('TestComponent');
+    expect(component.props().appLanguage).toEqual('en_US');
+    expect(component.props().translate).not.toBeDefined();
 });
 
 test('with locale', () => {
@@ -40,8 +43,7 @@ test('with locale', () => {
                             contextIdReducer={{}}
                             appLanguage="en_US"/>
     );
-    expect(wrapper.props().appLanguage).toEqual('en_US');
-    // TODO: this test will not work because our HOC os asynchronous.
-    // https://github.com/facebook/create-react-app/issues/3482
-    // expect(wrapper.props().translate).toBeDefined();
+    const component = wrapper.find('TestComponent');
+    expect(component.props().appLanguage).toEqual('en_US');
+    expect(component.props().translate).toBeDefined();
 });
