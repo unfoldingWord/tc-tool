@@ -20,7 +20,8 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
-      "!**/node_modules/**"
+      "!**/node_modules/**",
+      "!src/index.js"
     ],
     "coverageDirectory": "coverage",
     "rootDir": "./"

@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshots renders the error screen 1`] = `
+<div
+  style={
+    Object {
+      "margin": "40px",
+      "width": "100%",
+    }
+  }
+>
+  <h1
+    style={
+      Object {
+        "textAlign": "center",
+        "width": "100%",
+      }
+    }
+  >
+    ERROR
+  </h1>
+  <details
+    style={
+      Object {
+        "backgroundColor": "#ffe6e6",
+        "color": "#cc3939",
+        "lineHeight": "150%",
+        "whiteSpace": "pre-wrap",
+      }
+    }
+  >
+    Error: Something broke!
+    <br />
+    
+    in BrokenComponent (created by Tool)
+    in Provider (created by Tool)
+    in Tool
+  </details>
+</div>
+`;
+
+exports[`snapshots renders the wrapped component 1`] = `
+<div>
+  Hello World!
+</div>
+`;

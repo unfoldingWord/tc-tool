@@ -17,7 +17,7 @@ import fs from 'fs-extra';
  * @return {function(*)}
  */
 const connectTool = (toolId, localeDir) => {
-  if(typeof toolId !== 'string') {
+  if(!toolId || typeof toolId !== 'string') {
     throw Error(`Invalid parameter. Expected toolId to be a string but found ${typeof toolId} instead`);
   }
     if(localeDir && typeof localeDir !== 'string') {
