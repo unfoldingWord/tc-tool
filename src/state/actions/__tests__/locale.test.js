@@ -1,4 +1,3 @@
-import reducer from '../../reducers/localeSettings';
 import * as actions from '../locale';
 import * as types from '../types';
 import configureMockStore from 'redux-mock-store';
@@ -8,7 +7,6 @@ import _ from 'lodash';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-
 
 describe('actions', () => {
 
@@ -107,24 +105,6 @@ describe('actions', () => {
                 });
                 expect(receivedActionTypes).toEqual(expectedActionTypes);
             });
-        });
-    });
-});
-
-describe('reducers', () => {
-    it('should return the initial state', () => {
-        expect(reducer(undefined, {})).toEqual({
-            loaded: false
-        });
-    });
-
-    it('should handle LOCALE_LOADED', () => {
-        expect(
-            reducer({}, {
-                type: types.LOCALE_LOADED
-            })
-        ).toEqual({
-            loaded: true
         });
     });
 });

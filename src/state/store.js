@@ -6,7 +6,8 @@ import {connect} from 'react-redux';
 import { createLogger } from 'redux-logger';
 
 /**
- * Returns a configured store object
+ * Returns a configured store object.
+ *
  * @return {Store<any>}
  */
 export const configureStore = () => {
@@ -23,7 +24,9 @@ export const configureStore = () => {
 };
 
 /**
- * Create a custom react-redux connection HOC that binds to a particular store key
+ * Creates a custom react-redux connection HOC that binds to a particular store key.
+ * This allows us to connect to tool redux store instead of the default one.
+ *
  * @param {string} key - the store key
  * @return {function(*=, *=, *=, *=)}
  */

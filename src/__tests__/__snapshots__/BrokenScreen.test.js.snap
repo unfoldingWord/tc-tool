@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  style={
+    Object {
+      "margin": "40px",
+      "width": "100%",
+    }
+  }
+>
+  <h1
+    style={
+      Object {
+        "textAlign": "center",
+        "width": "100%",
+      }
+    }
+  >
+    title
+  </h1>
+  <details
+    style={
+      Object {
+        "backgroundColor": "#ffe6e6",
+        "color": "#cc3939",
+        "lineHeight": "150%",
+        "whiteSpace": "pre-wrap",
+      }
+    }
+  >
+    Error: Some error message
+    <br />
+    in WordBankItem
+    in DragSource(WordBankItem)
+    in div
+    in WordBankArea
+  </details>
+</div>
+`;

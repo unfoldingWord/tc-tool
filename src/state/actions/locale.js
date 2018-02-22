@@ -18,7 +18,7 @@ const DEFAULT_LOCALE = 'en_US';
  * @param languageCode
  */
 const onMissingTranslation = (key, languageCode) => {
-  console.error(`Missing locale translation key "${key}" for language ${languageCode}`, new Error().stack);
+  console.error(`Missing locale key "${key}" for language ${languageCode}`, new Error().stack);
 };
 
 /**
@@ -116,7 +116,7 @@ export const loadLocalization = (localeDir, appLanguage=null) => {
             translations[shortLangCode] = translation;
           }
         } catch(e) {
-          console.error(`Failed to load localization ${localeFile}: ${e}`);
+          console.warn(`Failed to load localization ${localeFile}: ${e}`);
         }
       }
       return Promise.resolve({languages, translations});
@@ -154,7 +154,7 @@ export const loadLocalization = (localeDir, appLanguage=null) => {
     }).then(() => {
       dispatch(setLocaleLoaded());
     }).catch(err => {
-      console.log('Failed to initialize localization', err);
+      console.error('Failed to initialize localization', err);
     });
   };
 };
@@ -168,7 +168,6 @@ export const loadLocalization = (localeDir, appLanguage=null) => {
  */
 const setSystemLocale = (dispatch, languages, translations) => {
   return osLocale().then(locale => {
-    console.log(`System Locale: ${locale}`);
     setActiveLanguageSafely(dispatch, locale, languages, translations);
   });
 };
@@ -191,7 +190,7 @@ const setActiveLanguageSafely = (dispatch, locale, languages, translations) => {
   } else if (_.indexOf(languages, shortLocale) >= 0) {
     // equivalent locale
     let equivalentLocale = translations[shortLocale]['_']['locale'];
-    console.warn(`Using equivalent locale: ${equivalentLocale}`);
+    console.log(`Using equivalent locale: ${equivalentLocale}`);
     dispatch(setActiveLanguage(equivalentLocale));
   } else {
     console.error(`No translations found for locale: ${locale}`);
