@@ -24,3 +24,11 @@ export const getTranslate = (state) =>
  */
 export const getLocaleLoaded = (state) =>
   fromLocaleSettings.getLocaleLoaded(state.localeSettings);
+
+/**
+ * Returns the locale language that is currently active
+ * @param state
+ * @return {Language}
+ */
+export const getActiveLanguage = (state) =>
+    fromReactLocalizeRedux.getActiveLanguage(state.locale);

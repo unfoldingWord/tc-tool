@@ -5,7 +5,7 @@ import {configureStore} from './state/store';
 import {loadLocalization} from './state/actions/locale';
 import {setActiveLanguage} from 'react-localize-redux';
 import BrokenScreen from './BrokenScreen';
-import {getTranslate, getLocaleLoaded} from './state/reducers';
+import {getTranslate, getLocaleLoaded, getActiveLanguage} from './state/reducers';
 import fs from 'fs-extra';
 
 /**
@@ -137,12 +137,16 @@ const connectTool = (toolId, localeDir) => {
           return brokenScreen;
         } else {
           let translate = undefined;
+          let currentLanguage = undefined;
           if(hasLocale) {
             translate = getTranslate(this.store.getState());
+            const lang = getActiveLanguage(this.store.getState());
+            currentLanguage = lang ? lang.code : undefined;
           }
           return this._connectProvider(
             <WrappedComponent
               translate={translate}
+              currentLanguage={currentLanguage}
               {...this.props}
             />
           );
