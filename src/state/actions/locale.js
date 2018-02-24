@@ -215,15 +215,19 @@ export const setActiveLocale = (locale) => {
 
     return osLocale().then(osLocale => {
       const locales = [locale, osLocale, 'en_US'];
+      let foundLocale = false;
       for(const langCode of locales) {
         if(setActiveLanguageSafely(dispatch, langCode, languages, translations)) {
           if(langCode !== locale) {
             console.warn(`Could not find locale ${locale}. Falling back to ${langCode}`);
           }
+          foundLocale = true;
           break;
         }
       }
-      console.error('Unable to find suitable locale.');
+      if(!foundLocale) {
+        console.error('Unable to find suitable locale.');
+      }
     });
   };
 };
