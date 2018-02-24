@@ -142,35 +142,13 @@ export const loadLocalization = (localeDir, appLanguage=null) => {
     }).then(({languages, translations}) => {
       if(appLanguage === DEFAULT_LOCALE) return;
 
-      if(appLanguage) {
-        // set selected locale
-        if(!setActiveLanguageSafely(dispatch, appLanguage, languages, translations)) {
-          // fall back to system locale
-          return setSystemLocale(dispatch, languages, translations);
-        }
-      } else {
-        // select system language
-        return setSystemLocale(dispatch, languages, translations);
-      }
+      return setActiveLocale(dispatch, appLanguage, languages, translations);
     }).then(() => {
       dispatch(setLocaleLoaded());
     }).catch(err => {
       console.error('Failed to initialize localization', err);
     });
   };
-};
-
-/**
- * Sets the active locale from the system locale
- * @param dispatch
- * @param languages
- * @param translations
- * @return {Promise}
- */
-const setSystemLocale = (dispatch, languages, translations) => {
-  return osLocale().then(locale => {
-    setActiveLanguageSafely(dispatch, locale, languages, translations);
-  });
 };
 
 /**
@@ -204,30 +182,45 @@ const setActiveLanguageSafely = (dispatch, locale, languages, translations) => {
  * Sets the active locale.
  * This will fallback to the system os, then english if the locale is not found.
  *
+ * @param dispatch
+ * @param {string} locale - the language code to set. This can be null
+ * @param languages
+ * @param translations
+ * @return {function(*=, *)}
+ */
+const setActiveLocale = (dispatch, locale, languages, translations) => {
+  return osLocale().then(osLocale => {
+    const locales = [locale, osLocale, 'en_US'];
+    let foundLocale = false;
+    for(const langCode of locales) {
+      // TRICK: make sure the input locale was not null
+      if(langCode && setActiveLanguageSafely(dispatch, langCode, languages, translations)) {
+        if(langCode !== locale) {
+          console.warn(`Could not find locale ${locale}. Falling back to ${langCode}`);
+        }
+        foundLocale = true;
+        break;
+      }
+    }
+    if(!foundLocale) {
+      console.error('Unable to find suitable locale.');
+    }
+  });
+};
+
+
+/**
+ * Sets the active locale.
+ * This will fallback to the system os, then english if the locale is not found.
+ *
  * @param {string} locale - the language code to set
  * @return {function(*=, *)}
  */
-export const setActiveLocale = (locale) => {
+exports.setActiveLocale = (locale) => {
   return (dispatch, getState) => {
     const state = getState();
     const translations = getTranslations(state);
     const languages = _.map(getLanguages(state), 'code');
-
-    return osLocale().then(osLocale => {
-      const locales = [locale, osLocale, 'en_US'];
-      let foundLocale = false;
-      for(const langCode of locales) {
-        if(setActiveLanguageSafely(dispatch, langCode, languages, translations)) {
-          if(langCode !== locale) {
-            console.warn(`Could not find locale ${locale}. Falling back to ${langCode}`);
-          }
-          foundLocale = true;
-          break;
-        }
-      }
-      if(!foundLocale) {
-        console.error('Unable to find suitable locale.');
-      }
-    });
+    setActiveLocale(dispatch, locale, languages, translations);
   };
 };
