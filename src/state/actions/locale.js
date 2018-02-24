@@ -9,6 +9,7 @@ import {initialize, addTranslationForLanguage, setActiveLanguage} from 'react-lo
 import osLocale from 'os-locale';
 import _ from 'lodash';
 import * as types from './types';
+import {getLanguages, getTranslations} from '../reducers';
 
 const DEFAULT_LOCALE = 'en_US';
 
@@ -197,4 +198,32 @@ const setActiveLanguageSafely = (dispatch, locale, languages, translations) => {
     return false;
   }
   return true;
+};
+
+/**
+ * Sets the active locale.
+ * This will fallback to the system os, then english if the locale is not found.
+ *
+ * @param {string} locale - the language code to set
+ * @return {function(*=, *)}
+ */
+export const setActiveLocale = (locale) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const translations = getTranslations(state);
+    const languages = getLanguages(state);
+
+    return osLocale().then(osLocale => {
+      const locales = [locale, osLocale, 'en_US'];
+      for(const langCode of locales) {
+        if(setActiveLanguageSafely(dispatch, langCode, languages, translations)) {
+          if(langCode !== locale) {
+            console.warn(`Could not find locale ${locale}. Falling back to ${langCode}`);
+          }
+          break;
+        }
+      }
+      console.error('Unable to find suitable locale.');
+    });
+  };
 };

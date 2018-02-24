@@ -32,3 +32,19 @@ export const getLocaleLoaded = (state) =>
  */
 export const getActiveLanguage = (state) =>
     fromReactLocalizeRedux.getActiveLanguage(state.locale);
+
+/**
+ * Returns the locale languages
+ * @param state
+ * @return {Language[]}
+ */
+export const getLanguages = (state) =>
+  fromReactLocalizeRedux.getLanguages(state.locale);
+
+/**
+ * Returns the locale translations
+ * @param state
+ * @return {Translations}
+ */
+export const getTranslations = (state) =>
+  fromReactLocalizeRedux.getTranslations(state.locale);

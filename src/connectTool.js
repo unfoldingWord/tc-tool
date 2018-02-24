@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {createProvider} from 'react-redux';
 import {configureStore} from './state/store';
-import {loadLocalization} from './state/actions/locale';
-import {setActiveLanguage} from 'react-localize-redux';
+import {loadLocalization, setActiveLocale} from './state/actions/locale';
 import BrokenScreen from './BrokenScreen';
 import {getTranslate, getLocaleLoaded, getActiveLanguage} from './state/reducers';
 import fs from 'fs-extra';
@@ -75,7 +74,7 @@ const connectTool = (toolId, localeDir) => {
       componentWillReceiveProps(nextProps) {
         // stay in sync with the application language
         if(hasLocale && nextProps.appLanguage !== this.props.appLanguage) {
-          this.store.dispatch(setActiveLanguage(nextProps.appLanguage));
+          this.store.dispatch(setActiveLocale(nextProps.appLanguage));
         }
       }
 
