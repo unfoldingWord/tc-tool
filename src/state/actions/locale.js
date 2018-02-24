@@ -211,7 +211,7 @@ export const setActiveLocale = (locale) => {
   return (dispatch, getState) => {
     const state = getState();
     const translations = getTranslations(state);
-    const languages = getLanguages(state);
+    const languages = _.map(getLanguages(state), 'code');
 
     return osLocale().then(osLocale => {
       const locales = [locale, osLocale, 'en_US'];
