@@ -19,7 +19,7 @@ const DEFAULT_LOCALE = 'en_US';
  * @param languageCode
  */
 const onMissingTranslation = (key, languageCode) => {
-  console.error(`Missing locale key "${key}" for language ${languageCode}`, new Error().stack);
+  console.error(`Tool missing locale key "${key}" for language ${languageCode}`, new Error().stack);
 };
 
 /**
@@ -78,20 +78,20 @@ export const setLocaleLoaded = () => ({
 export const loadLocalization = (localeDir, appLanguage=null) => {
   return (dispatch) => {
     if(!fs.existsSync(localeDir)) {
-      return Promise.reject(`Missing locale dir at ${localeDir}`);
+      return Promise.reject(`Tool missing locale dir at ${localeDir}`);
     }
     return fs.readdir(localeDir).then((items) => {
       // load locale
       let languages = [];
       let translations = {};
       if(!items) {
-        return Promise.reject(`No localization files found in ${localeDir}`);
+        return Promise.reject(`Tool found no localization files in ${localeDir}`);
       }
       for(let file of items) {
         if(!file.endsWith('.json')) {
           // don't warn if readme or NonTranslatable.js
           if(!file.endsWith('.md') && !file.endsWith('.js')) {
-            console.warn(`Skipping invalid localization file ${file}`);
+            console.warn(`Tool skipping invalid localization file ${file}`);
           }
           continue;
         }
@@ -117,7 +117,7 @@ export const loadLocalization = (localeDir, appLanguage=null) => {
             translations[shortLangCode] = translation;
           }
         } catch(e) {
-          console.warn(`Failed to load localization ${localeFile}: ${e}`);
+          console.warn(`Fool failed to load localization ${localeFile}: ${e}`);
         }
       }
       return Promise.resolve({languages, translations});
@@ -146,7 +146,7 @@ export const loadLocalization = (localeDir, appLanguage=null) => {
     }).then(() => {
       dispatch(setLocaleLoaded());
     }).catch(err => {
-      console.error('Failed to initialize localization', err);
+      console.error('Tool failed to initialize localization', err);
     });
   };
 };
@@ -172,7 +172,7 @@ const setActiveLanguageSafely = (dispatch, locale, languages, translations) => {
     console.log(`Using equivalent locale: ${equivalentLocale}`);
     dispatch(setActiveLanguage(equivalentLocale));
   } else {
-    console.error(`No translations found for locale: ${locale}`);
+    console.error(`Tool found no translations for locale: ${locale}`);
     return false;
   }
   return true;
@@ -196,14 +196,14 @@ const setActiveLocale = (dispatch, locale, languages, translations) => {
       // TRICK: make sure the input locale was not null
       if(langCode && setActiveLanguageSafely(dispatch, langCode, languages, translations)) {
         if(langCode !== locale) {
-          console.warn(`Could not find locale ${locale}. Falling back to ${langCode}`);
+          console.warn(`Tool could not find locale ${locale}. Falling back to ${langCode}`);
         }
         foundLocale = true;
         break;
       }
     }
     if(!foundLocale) {
-      console.error('Unable to find suitable locale.');
+      console.error('Tool was unable to find suitable locale.');
     }
   });
 };

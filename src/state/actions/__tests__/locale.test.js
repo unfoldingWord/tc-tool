@@ -79,7 +79,7 @@ describe('actions', () => {
         it('should reject if locale dir is missing', () => {
             let localeDir = null;
             const store = mockStore({});
-            return expect(store.dispatch(actions.loadLocalization(localeDir))).rejects.toEqual('Missing locale dir at null');
+            return expect(store.dispatch(actions.loadLocalization(localeDir))).rejects.toEqual('Tool missing locale dir at null');
         });
 
         it('should use an equivalent locale', () => {
