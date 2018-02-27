@@ -31,20 +31,16 @@ describe('props', () => {
         configure({adapter: new Adapter()});
     });
 
-    test('missing toolId param', () => {
-        expect(connectTool).toThrow('Invalid parameter. Expected toolId to be a string but found undefined instead');
-    });
-
-    test('invalid toolId param', () => {
-        expect(connectTool.bind(null, 1)).toThrow('Invalid parameter. Expected toolId to be a string but found number instead');
+    test('no params', () => {
+        expect(connectTool).not.toThrow();
     });
 
     test('invalid localeDir param', () => {
-        expect(connectTool.bind(null, 'id', 1)).toThrow('Invalid parameter. Expected localeDir to be a string but found number instead');
+        expect(connectTool.bind(null, 1)).toThrow('Invalid parameter. Expected localeDir to be a string but found number instead');
     });
 
     test('missing locale dir', () => {
-        const ConnectedComponent = connectTool('testId')(TestComponent);
+        const ConnectedComponent = connectTool()(TestComponent);
         const wrapper = mount(
             <ConnectedComponent currentToolViews={{}}
                                 resourcesReducer={{}}
@@ -58,7 +54,7 @@ describe('props', () => {
     });
 
     test('with locale', () => {
-        const ConnectedComponent = connectTool('testId', localeDir)(TestComponent);
+        const ConnectedComponent = connectTool(localeDir)(TestComponent);
         const wrapper = mount(
             <ConnectedComponent currentToolViews={{}}
                                 resourcesReducer={{}}
@@ -72,7 +68,7 @@ describe('props', () => {
     });
 
     test('missing app language', () => {
-        const ConnectedComponent = connectTool('testId', localeDir)(TestComponent);
+        const ConnectedComponent = connectTool(localeDir)(TestComponent);
         const wrapper = mount(
             <ConnectedComponent currentToolViews={{}}
                                 resourcesReducer={{}}
@@ -89,7 +85,7 @@ describe('props', () => {
 describe('snapshots', () => {
 
     it('renders the wrapped component', () => {
-        const ConnectedComponent = connectTool('testId', localeDir)(TestComponent);
+        const ConnectedComponent = connectTool(localeDir)(TestComponent);
         const wrapper = renderer.create(
             <ConnectedComponent currentToolViews={{}}
                                 resourcesReducer={{}}
@@ -100,7 +96,7 @@ describe('snapshots', () => {
     });
 
     it('renders the error screen', () => {
-        const ConnectedComponent = connectTool('testId', localeDir)(BrokenComponent);
+        const ConnectedComponent = connectTool(localeDir)(BrokenComponent);
         const wrapper = renderer.create(
             <ConnectedComponent currentToolViews={{}}
                                 resourcesReducer={{}}

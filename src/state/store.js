@@ -2,7 +2,6 @@ import { createStore, applyMiddleware } from 'redux';
 import promise from 'redux-promise';
 import thunk from 'redux-thunk';
 import toolReducer from './reducers/index';
-import {connect} from 'react-redux';
 import { createLogger } from 'redux-logger';
 
 /**
@@ -21,28 +20,4 @@ export const configureStore = () => {
     undefined,
     applyMiddleware(...middlewares)
   );
-};
-
-/**
- * Creates a custom react-redux connection HOC that binds to a particular store key.
- * This allows us to connect to tool redux store instead of the default one.
- *
- * @param {string} key - the store key
- * @return {function(*=, *=, *=, *=)}
- */
-export const createConnect = (key) => {
-  return (
-    mapStateToProps,
-    mapDispatchToProps,
-    mergeProps,
-    options = {}
-  ) => {
-    options.storeKey = key;
-    return connect(
-      mapStateToProps,
-      mapDispatchToProps,
-      mergeProps,
-      options
-    );
-  };
 };
