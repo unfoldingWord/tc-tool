@@ -50,6 +50,37 @@ class Container extends React.Component {
 > **NOTE** when using locale, if the selected langauge in tC core is not supported by
 > the tool, it will first use the system locale as a fallback or else English.
 
+## Injecting a Tool Reducer
+
+If you would like to utilize redux in your tool you can supply a reducer as the second argument
+to `connectTool`. Then you can use the standard `connect` HOC from `react-redux` to subscribe to the store.
+
+```js
+// index.js
+import reducer from './reducers';
+...
+connectTool(LOCALE_DIR, reducer)(Container)
+```
+
+Then your reducer state will be available under `state.tool`.
+```js
+// Container.js
+import connect from 'react-redux';
+...
+
+class Container extends React.Component {
+  render() {
+    const {myValue} =this.props;
+    ...
+  }
+}
+
+const mapStateToProps = (state) => {
+  myValue: state.tool.myKey
+};
+export default connect(mapStateToProps)(Container);
+```
+
 ## Features
 
 * **state** - Adds a scoped redux store to the component.
