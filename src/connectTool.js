@@ -16,9 +16,10 @@ import fs from 'fs-extra';
  * It also specifies some required properties common to all tools.
  *
  * @param {string} [localeDir] - directory containing the interface locale files
+ * @param {*} [reducer] - a custom reducer for the tool.
  * @return {function(*)}
  */
-const connectTool = (localeDir) => {
+const connectTool = (localeDir, reducer) => {
   if (localeDir && typeof localeDir !== 'string') {
     throw Error(
       `Invalid parameter. Expected localeDir to be a string but found ${typeof localeDir} instead`);
@@ -31,8 +32,7 @@ const connectTool = (localeDir) => {
         'No locale found. You should consider localizing this tool.');
     }
 
-    // TODO: support custom reducers
-    const store = configureStore();
+    const store = configureStore(reducer);
     // TRICKY: this will overwrite the default store context key
     // thus removing direct access to tC core's store which also uses the default key.
     const Provider = createProvider();
