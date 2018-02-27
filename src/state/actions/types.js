@@ -1,1 +1,1 @@
-export const LOCALE_LOADED = '@@TC_TOOL/LOCALE_LOADED';
+export const LOCALE_LOADED = '@@tool/LOCALE_LOADED';

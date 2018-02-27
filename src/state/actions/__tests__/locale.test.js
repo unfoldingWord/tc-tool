@@ -45,7 +45,7 @@ describe('actions', () => {
                 '@@localize/ADD_TRANSLATION_FOR_LANGUGE', // for short locale addition
                 '@@localize/ADD_TRANSLATION_FOR_LANGUGE', //na_NA
                 '@@localize/ADD_TRANSLATION_FOR_LANGUGE', // for short locale addition
-                'LOCALE_LOADED'
+                '@@tool/LOCALE_LOADED'
             ];
             const store = mockStore({});
             return store.dispatch(actions.loadLocalization(localeDir, defaultLanguage)).then(() => {
@@ -65,7 +65,7 @@ describe('actions', () => {
                 '@@localize/ADD_TRANSLATION_FOR_LANGUGE', //na_NA
                 '@@localize/ADD_TRANSLATION_FOR_LANGUGE', // for short locale addition
                 '@@localize/SET_ACTIVE_LANGUAGE',
-                'LOCALE_LOADED'
+                '@@tool/LOCALE_LOADED'
             ];
             const store = mockStore({});
             return store.dispatch(actions.loadLocalization(localeDir)).then(() => {
@@ -92,7 +92,7 @@ describe('actions', () => {
                 {type: '@@localize/ADD_TRANSLATION_FOR_LANGUGE', languageCode: undefined}, // na_NA
                 {type: '@@localize/ADD_TRANSLATION_FOR_LANGUGE', languageCode: undefined}, // for short locale addition
                 {type: '@@localize/SET_ACTIVE_LANGUAGE', languageCode: 'na_NA'},
-                {type: 'LOCALE_LOADED'}
+                {type: '@@tool/LOCALE_LOADED'}
             ];
             const store = mockStore({});
             return store.dispatch(actions.loadLocalization(localeDir, defaultLanguage)).then(() => {

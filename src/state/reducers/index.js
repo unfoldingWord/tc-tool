@@ -15,7 +15,7 @@ export default reducers;
  * @return {Translate}
  */
 export const getTranslate = (state) =>
-  fromReactLocalizeRedux.getTranslate(state.locale);
+  fromReactLocalizeRedux.getTranslate(state.internal.locale);
 
 /**
  * Checks if the locale has been loaded
@@ -23,7 +23,7 @@ export const getTranslate = (state) =>
  * @return {bool}
  */
 export const getLocaleLoaded = (state) =>
-  fromLocaleSettings.getLocaleLoaded(state.localeSettings);
+  fromLocaleSettings.getLocaleLoaded(state.internal.localeSettings);
 
 /**
  * Returns the locale language that is currently active
@@ -31,7 +31,7 @@ export const getLocaleLoaded = (state) =>
  * @return {Language}
  */
 export const getActiveLanguage = (state) =>
-    fromReactLocalizeRedux.getActiveLanguage(state.locale);
+    fromReactLocalizeRedux.getActiveLanguage(state.internal.locale);
 
 /**
  * Returns the locale languages
@@ -39,7 +39,7 @@ export const getActiveLanguage = (state) =>
  * @return {Language[]}
  */
 export const getLanguages = (state) =>
-  fromReactLocalizeRedux.getLanguages(state.locale);
+  fromReactLocalizeRedux.getLanguages(state.internal.locale);
 
 /**
  * Returns the locale translations
@@ -47,4 +47,4 @@ export const getLanguages = (state) =>
  * @return {Translations}
  */
 export const getTranslations = (state) =>
-  fromReactLocalizeRedux.getTranslations(state.locale);
+  fromReactLocalizeRedux.getTranslations(state.internal.locale);

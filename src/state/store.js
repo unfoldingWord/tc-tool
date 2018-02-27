@@ -16,16 +16,10 @@ export const configureStore = (reducer=null) => {
     middlewares.push(createLogger());
   }
 
-  // optionally inject tool reducer
-  let reducers = null;
-  if(typeof reducer === 'function') {
-    reducers = combineReducers({
-      internal:internalReducer,
-      tool:reducer
-    });
-  } else {
-    reducers = internalReducer;
-  }
+  const reducers = combineReducers({
+    internal:internalReducer,
+    tool:reducer
+  });
 
   return createStore(
     reducers,
