@@ -12,7 +12,7 @@ import { createLogger } from 'redux-logger';
  */
 export const configureStore = (reducer=null) => {
   const middlewares = [thunk, promise];
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'development') {
     middlewares.push(createLogger());
   }
 
