@@ -27,9 +27,10 @@ const connectTool = (localeDir, reducer) => {
 
   return (WrappedComponent) => {
     const hasLocale = localeDir && fs.existsSync(localeDir);
-    if (!hasLocale) {
-      console.warn(
-        'No locale found. You should consider localizing this tool.');
+    if(!localeDir) {
+      console.warn('You should consider localizing this tool.');
+    } else if (!hasLocale) {
+      console.warn(`No locale found at ${localeDir}`);
     }
 
     const store = configureStore(reducer);
