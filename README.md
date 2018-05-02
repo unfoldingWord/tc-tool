@@ -81,6 +81,26 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps)(Container);
 ```
 
+## Applying Middleware
+
+The tool already comes configured with the following middleware:
+
+* [redux-promise](https://www.npmjs.com/package/redux-promise)
+* [redux-thunk](https://www.npmjs.com/package/redux-thunk)
+* [redux-logger](https://www.npmjs.com/package/redux-logger) (when `NODE_ENV=development`)
+
+If you need to add additional middleware you can inject it the same way you do your reducer.
+
+```js
+// index.js
+import reducer from './reducers';
+import {createLogicMiddleware} from 'redux-logic';
+const LOCALE_DIR = path.join(__dirname, './locale');
+
+const myMiddlewares = [createLogicMiddleware()];
+connectTool(LOCALE_DIR, reducer, myMiddlewares)(Container);
+```
+
 ## Features
 
 * **state** - Adds a scoped redux store to the component.

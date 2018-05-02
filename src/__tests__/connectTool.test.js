@@ -20,7 +20,6 @@ class TestComponent extends React.Component {
 class BrokenComponent extends React.Component {
     render() {
         throw Error('Something broke!');
-        return null;
     }
 }
 

@@ -8,12 +8,13 @@ import { createLogger } from 'redux-logger';
  * Returns a configured store object.
  *
  * @param {*} [reducer] - The tool's reducer
+ * @param {[]} [middlewares] - an array of middleware to include
  * @return {Store<any>}
  */
-export const configureStore = (reducer=null) => {
-  const middlewares = [thunk, promise];
+export const configureStore = (reducer=null, middlewares=[]) => {
+  const mw = [...middlewares, thunk, promise];
   if (process.env.NODE_ENV === 'development') {
-    middlewares.push(createLogger());
+    mw.push(createLogger());
   }
 
   const reducers = combineReducers({
@@ -24,6 +25,6 @@ export const configureStore = (reducer=null) => {
   return createStore(
     reducers,
     undefined,
-    applyMiddleware(...middlewares)
+    applyMiddleware(...mw)
   );
 };

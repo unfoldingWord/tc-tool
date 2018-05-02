@@ -17,15 +17,17 @@ import fs from 'fs-extra';
  *
  * @param {string} [localeDir] - directory containing the interface locale files
  * @param {*} [reducer] - a custom reducer for the tool.
+ * @param {[]} [middlewares] - an array of middleware to inject into the store.
  * @return {function(*)}
  */
-const connectTool = (localeDir, reducer) => {
+const connectTool = (localeDir, reducer=undefined, middlewares=undefined) => {
   if (localeDir && typeof localeDir !== 'string') {
     throw Error(
       `Invalid parameter. Expected localeDir to be a string but found ${typeof localeDir} instead`);
   }
 
   return (WrappedComponent) => {
+    console.info('Booting tool...');
     const hasLocale = localeDir && fs.existsSync(localeDir);
     if(!localeDir) {
       console.warn('You should consider localizing this tool.');
@@ -33,7 +35,7 @@ const connectTool = (localeDir, reducer) => {
       console.warn(`No locale found at ${localeDir}`);
     }
 
-    const store = configureStore(reducer);
+    const store = configureStore(reducer, middlewares);
     // TRICKY: this will overwrite the default store context key
     // thus removing direct access to tC core's store which also uses the default key.
     const Provider = createProvider();
