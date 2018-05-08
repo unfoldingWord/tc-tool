@@ -1,33 +1,63 @@
 import Lifecycle from '../Lifecycle';
 
 describe('Lifecycle', () => {
-  let obj = {
-    hello: () => 'world',
-    withArgs: message => message
-  };
+  let wrappedObj;
+  let resolver;
+
+  beforeEach(() =>{
+    wrappedObj = new Lifecycle({
+      hello: () => 'world',
+      withArgs: message => message,
+      blocking: (spy) => {
+        spy();
+        return new Promise(resolve => {
+          resolver = resolve;
+        });
+      }
+    });
+  });
 
   it('executes an existing method', () => {
-    const wrappedObj = new Lifecycle(obj);
     expect(wrappedObj.trigger('hello')).toEqual('world');
   });
 
   it('executes a missing method', () => {
-    const wrappedObj = new Lifecycle(obj);
     expect(wrappedObj.trigger('missing')).toEqual(undefined);
   });
 
   it('passes arguments to a method', () => {
-    const wrappedObj = new Lifecycle(obj);
     expect(wrappedObj.trigger('withArgs', 'Hello world!')).toEqual('Hello world!');
   });
 
   it('rejects calling the constructor', () => {
-    const wrappedObj = new Lifecycle(obj);
     expect(() => wrappedObj.trigger('constructor')).toThrow();
   });
 
   it('rejects calling a private method', () => {
-    const wrappedObj = new Lifecycle(obj);
     expect(() => wrappedObj.trigger('_privateMethod')).toThrow();
+  });
+
+  it('blocks a method', () => {
+    const spy = jest.fn();
+    const callback = jest.fn();
+    wrappedObj.triggerBlocking('blocking', callback, spy);
+    expect(spy).toBeCalled();
+
+    // trigger while blocked
+    const spy2 = jest.fn();
+    wrappedObj.triggerBlocking('blocking', jest.fn(), spy2);
+    expect(spy2).not.toBeCalled();
+
+    // resolve
+    resolver();
+    setTimeout(() => {
+      // TRICKY: give the callback a moment to finish resolving.
+      expect(callback).toBeCalled();
+    }, 0);
+
+    // trigger newly un-blocked method
+    const spy3 = jest.fn();
+    wrappedObj.triggerBlocking('blocking', jest.fn(), spy3);
+    expect(spy3).not.toBeCalled();
   });
 });
