@@ -15,12 +15,20 @@ import fs from 'fs-extra';
  * This HOC initializes a store and locale for the tool.
  * It also specifies some required properties common to all tools.
  *
- * @param {string} [localeDir] - directory containing the interface locale files
- * @param {*} [reducer] - a custom reducer for the tool.
- * @param {[]} [middlewares] - an array of middleware to inject into the store.
+ * @param namespace
+ * @param options
  * @return {function(*)}
  */
-const connectTool = (localeDir, reducer=undefined, middlewares=undefined) => {
+const connectTool = (namespace, options={}) => {
+
+  /**
+   * @param {string} [localeDir] - directory containing the interface locale files
+   * @param {*} [reducer] - a custom reducer for the tool.
+   * @param {[]} [middlewares] - an array of middleware to inject into the store.
+   * @param {*} [api] - The tool's api class
+   */
+  const {localeDir, reducer=undefined, middlewares=undefined, api=undefined} = options;
+
   if (localeDir && typeof localeDir !== 'string') {
     throw Error(
       `Invalid parameter. Expected localeDir to be a string but found ${typeof localeDir} instead`);
@@ -39,6 +47,11 @@ const connectTool = (localeDir, reducer=undefined, middlewares=undefined) => {
     // TRICKY: this will overwrite the default store context key
     // thus removing direct access to tC core's store which also uses the default key.
     const Provider = createProvider();
+
+    let toolApi = undefined;
+    if(api) {
+      toolApi = new api(store);
+    }
 
     /**
      * This container sets up the tool environment.
@@ -160,7 +173,12 @@ const connectTool = (localeDir, reducer=undefined, middlewares=undefined) => {
       contextIdReducer: PropTypes.object.isRequired,
       appLanguage: PropTypes.string.isRequired,
     };
-    return Tool;
+
+    return {
+      name: namespace,
+      api: toolApi,
+      container: Tool
+    };
   };
 };
 

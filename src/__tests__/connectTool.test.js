@@ -31,17 +31,17 @@ describe('props', () => {
     });
 
     test('no params', () => {
-        expect(connectTool).not.toThrow();
+        expect(connectTool.bind(null, 'my tool')).not.toThrow();
     });
 
     test('invalid localeDir param', () => {
-        expect(connectTool.bind(null, 1)).toThrow('Invalid parameter. Expected localeDir to be a string but found number instead');
+        expect(connectTool.bind(null, 'tool', {localeDir: 1})).toThrow('Invalid parameter. Expected localeDir to be a string but found number instead');
     });
 
     test('missing locale dir', () => {
-        const ConnectedComponent = connectTool()(TestComponent);
+        const ConnectedComponent = connectTool('tool', {})(TestComponent);
         const wrapper = mount(
-            <ConnectedComponent currentToolViews={{}}
+            <ConnectedComponent.container currentToolViews={{}}
                                 resourcesReducer={{}}
                                 contextIdReducer={{}}
                                 appLanguage="en_US"/>
@@ -53,9 +53,9 @@ describe('props', () => {
     });
 
     test('with locale', () => {
-        const ConnectedComponent = connectTool(localeDir)(TestComponent);
+        const ConnectedComponent = connectTool('tool', {localeDir})(TestComponent);
         const wrapper = mount(
-            <ConnectedComponent currentToolViews={{}}
+            <ConnectedComponent.container currentToolViews={{}}
                                 resourcesReducer={{}}
                                 contextIdReducer={{}}
                                 appLanguage="de_DE"/>
@@ -67,9 +67,9 @@ describe('props', () => {
     });
 
     test('missing app language', () => {
-        const ConnectedComponent = connectTool(localeDir)(TestComponent);
+        const ConnectedComponent = connectTool('tool', {localeDir})(TestComponent);
         const wrapper = mount(
-            <ConnectedComponent currentToolViews={{}}
+            <ConnectedComponent.container currentToolViews={{}}
                                 resourcesReducer={{}}
                                 contextIdReducer={{}}/>
         );
@@ -84,9 +84,9 @@ describe('props', () => {
 describe('snapshots', () => {
 
     it('renders the wrapped component', () => {
-        const ConnectedComponent = connectTool(localeDir)(TestComponent);
+        const ConnectedComponent = connectTool('tool', {localeDir})(TestComponent);
         const wrapper = renderer.create(
-            <ConnectedComponent currentToolViews={{}}
+            <ConnectedComponent.container currentToolViews={{}}
                                 resourcesReducer={{}}
                                 contextIdReducer={{}}
                                 appLanguage="de_DE"/>
@@ -95,9 +95,9 @@ describe('snapshots', () => {
     });
 
     it('renders the error screen', () => {
-        const ConnectedComponent = connectTool(localeDir)(BrokenComponent);
+        const ConnectedComponent = connectTool('tool', {localeDir})(BrokenComponent);
         const wrapper = renderer.create(
-            <ConnectedComponent currentToolViews={{}}
+            <ConnectedComponent.container currentToolViews={{}}
                                 resourcesReducer={{}}
                                 contextIdReducer={{}}
                                 appLanguage="de_DE"/>
