@@ -10,7 +10,8 @@ describe('Lifecycle', () => {
     hello: () => 'world',
     toolWillConnect: () => 'connected',
     toolWillDisconnect: () => 'disconnected',
-    stateChanged: jest.fn()
+    stateChanged: jest.fn(),
+    stateChangedSync: jest.fn()
   };
 
   beforeEach(() => {

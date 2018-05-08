@@ -117,7 +117,7 @@ export const loadLocalization = (localeDir, appLanguage=null) => {
             translations[shortLangCode] = translation;
           }
         } catch(e) {
-          console.warn(`Fool failed to load localization ${localeFile}: ${e}`);
+          console.warn(`Tool failed to load localization ${localeFile}: ${e}`);
         }
       }
       return Promise.resolve({languages, translations});
