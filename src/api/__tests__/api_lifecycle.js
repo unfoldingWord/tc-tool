@@ -17,6 +17,7 @@ describe('Lifecycle', () => {
   beforeEach(() => {
     store = mockStore({});
     obj.stateChanged.mockReset();
+    obj.stateChangeThrottled.mockReset();
   });
 
   it('executes an existing method', () => {
@@ -51,6 +52,9 @@ describe('Lifecycle', () => {
     const wrappedObj = new ApiLifecycle(obj, store);
     wrappedObj.triggerWillConnect();
     expect(obj.stateChangeThrottled).not.toBeCalled();
+    store.dispatch({ type: 'ANY_ACTION'});
+    store.dispatch({ type: 'ANY_ACTION'});
+    store.dispatch({ type: 'ANY_ACTION'});
     store.dispatch({ type: 'ANY_ACTION'});
 
     return new Promise(resolve => {

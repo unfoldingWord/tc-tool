@@ -158,6 +158,7 @@ const connectTool = (namespace, options={}) => {
               <WrappedComponent
                 translate={translate}
                 currentLanguage={currentLanguage}
+                toolApi={toolApi}
                 {...this.props}
               />
             </Provider>
