@@ -10,6 +10,7 @@ import {
   getTranslate,
 } from './state/reducers';
 import fs from 'fs-extra';
+import ApiLifecycle from './api/ApiLifecycle';
 
 /**
  * This HOC initializes a store and locale for the tool.
@@ -48,9 +49,10 @@ const connectTool = (namespace, options={}) => {
     // thus removing direct access to tC core's store which also uses the default key.
     const Provider = createProvider();
 
+    // inject redux into the api and bind the lifecycle methods.
     let toolApi = undefined;
     if(api) {
-      toolApi = new api(store);
+      toolApi = new ApiLifecycle(api, store);
     }
 
     /**
