@@ -11,7 +11,7 @@ describe('Lifecycle', () => {
     toolWillConnect: () => 'connected',
     toolWillDisconnect: () => 'disconnected',
     stateChanged: jest.fn(),
-    stateChangedSync: jest.fn()
+    stateChangeThrottled: jest.fn()
   };
 
   beforeEach(() => {
@@ -45,5 +45,20 @@ describe('Lifecycle', () => {
     wrappedObj.triggerWillDisconnect();
     store.dispatch({ type: 'ANY_ACTION'});
     expect(obj.stateChanged.mock.calls.length).toBe(1);
+  });
+
+  it('triggers throttled state changed', () => {
+    const wrappedObj = new ApiLifecycle(obj, store);
+    wrappedObj.triggerWillConnect();
+    expect(obj.stateChangeThrottled).not.toBeCalled();
+    store.dispatch({ type: 'ANY_ACTION'});
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        // TRICKY: give it some time to resolve.
+        expect(obj.stateChangeThrottled.mock.calls.length).toBe(2);
+        resolve();
+      }, 1000);
+    });
   });
 });

@@ -71,7 +71,9 @@ export default class ApiLifecycle extends Lifecycle {
     this.unsubscribe = this.store.subscribe(this.handleStoreChange);
     // TRICKY: wait one second before calling, but no more than 5 seconds.
     this.unsubscribeSync = this.store.subscribe(
-      debounce(() => this.handleStoreChangeThrottled, 1000, {maxWait: 5000}));
+      debounce(() => {
+        return this.handleStoreChangeThrottled();
+      }, 1000, 5000));
     return this.trigger('toolWillConnect');
   }
 
