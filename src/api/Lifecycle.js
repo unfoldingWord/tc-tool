@@ -13,8 +13,17 @@ const isPromise = (obj) => {
  */
 export default class Lifecycle {
   constructor(target) {
-    this.target = target;
-    this.blocks = {};
+    this._target = target;
+    this._blocks = {};
+  }
+
+  /**
+   * Throws an exception
+   * @param {string} message - the error message
+   * @private
+   */
+  static _throw(message) {
+    throw new Error(`Lifecycle Error: ${message}`);
   }
 
   /**
@@ -22,7 +31,7 @@ export default class Lifecycle {
    * @param key
    */
   blockMethod(key) {
-    this.blocks[key] = true;
+    this._blocks[key] = true;
   }
 
   /**
@@ -30,7 +39,7 @@ export default class Lifecycle {
    * @param key
    */
   unblockMethod(key) {
-    this.blocks[key] = false;
+    this._blocks[key] = false;
   }
 
   /**
@@ -39,25 +48,48 @@ export default class Lifecycle {
    * @return {boolean|*}
    */
   isMethodBlocked(key) {
-    return key in this.blocks && this.blocks[key];
+    return key in this._blocks && this._blocks[key];
   }
 
   /**
    * Triggers a lifecycle method
-   * @param method
-   * @param props
+   * @param {string} method - the name of the lifecycle method to trigger
+   * @param {*} [args] - optional method arguments.
    */
-  trigger(method, ...props) {
-    if (method.startsWith('_') || method === 'constructor') {
-      // TRICKY: restrict private methods and constructors
-      throw new Error('Invalid lifecycle method. Must be a public method.');
+  trigger(method, ...args) {
+    if (method === 'constructor') {
+      Lifecycle._throw('Cannot execute constructors.');
     }
 
-    if (typeof this.target[method] === 'function') {
-      const callable = this.target[method].bind(this.target);
-      return callable(...props);
+    if (method.startsWith('_')) {
+      Lifecycle._throw(`Cannot execute private method "${method}".`);
+    }
+
+    if (this.methodExists(method)) {
+      const callable = this._target[method].bind(this._target);
+      return callable(...args);
     }
     return undefined;
+  }
+
+  /**
+   * Asserts the existence of a lifecycle method.
+   * @param {string} method - the name of the lifecycle method.
+   * @throws an error if the lifecycle method does not exist.
+   */
+  assertExists(method) {
+    if(!this.methodExists(method)) {
+      Lifecycle._throw(`The method "${method}" is required but is not defined in "${this._target}".`);
+    }
+  }
+
+  /**
+   * Checks if the lifecycle method exists
+   * @param method
+   * @return {boolean}
+   */
+  methodExists(method) {
+    return typeof this._target[method] === 'function';
   }
 
   /**
@@ -65,9 +97,9 @@ export default class Lifecycle {
    * This works with or without promises
    * @param {string} method - the name of the lifecycle method to trigger
    * @param {func} [callback] - callback to perform cleanup operations. Errors will be passed as arguments.
-   * @param {*} [params] - optional method arguments.
+   * @param {*} [args] - optional method arguments.
    */
-  triggerBlocking(method, callback=undefined, ...params) {
+  triggerBlocking(method, callback=undefined, ...args) {
     if (this.isMethodBlocked(method)) {
       return;
     }
@@ -75,7 +107,7 @@ export default class Lifecycle {
     this.blockMethod(method);
     let response = null;
     try {
-      response = this.trigger(method, ...params);
+      response = this.trigger(method, ...args);
       if (isPromise(response)) {
         // wait for promise to resolve
         response.then(() => {

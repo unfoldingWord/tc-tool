@@ -13,7 +13,7 @@ export default class ApiLifecycle extends Lifecycle {
    * @param {string} namespace - the name of the tool
    */
   constructor(api, store, namespace) {
-    super(api);
+    super(ApiLifecycle._bindToString(api, namespace));
     this._namespace = namespace;
     this._store = store;
     this._prevState = undefined;
@@ -29,6 +29,18 @@ export default class ApiLifecycle extends Lifecycle {
   }
 
   /**
+   * Binds a value to an object's toString method.
+   * @param {object} obj - the object receiving the toString method.
+   * @param {*} name - value to return as toString()
+   * @return {*}
+   * @private
+   */
+  static _bindToString(obj, name) {
+    obj.toString = () => name;
+    return obj;
+  }
+
+  /**
    * Returns the name of the tool
    * @return {string}
    */
@@ -41,7 +53,20 @@ export default class ApiLifecycle extends Lifecycle {
    * @param e
    */
   triggerDidCatch(e) {
-    this.trigger('toolDidCatch', e);
+    const method = 'toolDidCatch';
+    if (!this.methodExists(method)) {
+      console.error('Caught API lifecycle error.\n',
+        `You should consider adding the lifecycle method "${method}" so you can handle these errors yourself.\n`,
+        e);
+    } else {
+      // pass error handling to api
+      try {
+        this.trigger(method, e);
+      } catch (innerError) {
+        console.error('Caught API lifecycle error.\n',
+          `You shouldn't throw errors in "${method}"!\n`, innerError);
+      }
+    }
   }
 
   /**

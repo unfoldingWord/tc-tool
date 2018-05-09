@@ -6,6 +6,7 @@ describe('Lifecycle', () => {
 
   beforeEach(() =>{
     wrappedObj = new Lifecycle({
+      toString: () => 'wrappedObject',
       hello: () => 'world',
       withArgs: message => message,
       blockingScalar: spy => {
@@ -37,11 +38,19 @@ describe('Lifecycle', () => {
   });
 
   it('rejects calling the constructor', () => {
-    expect(() => wrappedObj.trigger('constructor')).toThrow();
+    expect(() => wrappedObj.trigger('constructor')).toThrowError('Cannot execute constructor');
   });
 
   it('rejects calling a private method', () => {
-    expect(() => wrappedObj.trigger('_privateMethod')).toThrow();
+    expect(() => wrappedObj.trigger('_privateMethod')).toThrowError('Lifecycle Error: Cannot execute private method "_privateMethod".');
+  });
+
+  it('asserts a method exists', () => {
+    expect(() => wrappedObj.assertExists('hello')).not.toThrow();
+  });
+
+  it('asserts a missing method exists', () => {
+    expect(() => wrappedObj.assertExists('missingMethod')).toThrowError('Lifecycle Error: The method "missingMethod" is required but is not defined in "wrappedObject".');
   });
 
   it('blocks a method that returns a promise', () => {
