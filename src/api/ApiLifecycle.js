@@ -27,6 +27,8 @@ export default class ApiLifecycle extends Lifecycle {
     this.triggerWillDisconnect = this.triggerWillDisconnect.bind(this);
     this.triggerDidCatch = this.triggerDidCatch.bind(this);
     this.triggerBlocking = this.triggerBlocking.bind(this);
+    this.triggerWillReceiveProps = this.triggerWillReceiveProps.bind(this);
+    this.name = this.name.bind(this);
   }
 
   /**
