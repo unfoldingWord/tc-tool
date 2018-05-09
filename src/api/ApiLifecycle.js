@@ -51,6 +51,8 @@ export default class ApiLifecycle extends Lifecycle {
    * @private
    */
   _preprocess(method, ...args) {
+    // TODO: I'm not very happy with this implementation, but it works for now.
+    // we probably just need a single props pre-processor.
     if (this._preprocessor) {
       return this._preprocessor(method, ...args);
     }
@@ -156,7 +158,13 @@ export default class ApiLifecycle extends Lifecycle {
    * @param {*} props - props that will be attached to the tool before it connects
    */
   triggerWillConnect(props) {
-    this._api.props = props;
+    const args = this._preprocess(names.WILL_CONNECT, props);
+    const processedProps = args.pop();
+    const mappedProps = this._triggerMapToProps();
+    this._api.props = {
+      ...processedProps,
+      ...mappedProps
+    };
 
     this.unsubscribe = this._store.subscribe(this.handleStoreChange);
     // TRICKY: wait one second before calling, but no more than 5 seconds.
