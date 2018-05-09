@@ -4,7 +4,7 @@ import * as types from './types';
  * Changes the tool's status to loading
  * @type {{type: string}}
  */
-export const setToolLoading = ({
+export const setToolLoading = () => ({
   type: types.TOOL_LOADING
 });
 
@@ -12,6 +12,6 @@ export const setToolLoading = ({
  * Changes the tool's status to ready
  * @type {{type: string}}
  */
-export const setToolReady = ({
+export const setToolReady = () => ({
   type: types.TOOL_READY
 });

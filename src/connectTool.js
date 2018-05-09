@@ -41,7 +41,7 @@ const getLocaleProps = (state, hasLocale) => {
  * @param {func} func
  * @return {func}
  */
-const wrapFunc = (dispatch, func) => (...args) => dispatch(func(...args));
+export const wrapFunc = (dispatch, func) => (...args) => dispatch(func(...args));
 
 /**
  * This HOC initializes a store and locale for the tool.
