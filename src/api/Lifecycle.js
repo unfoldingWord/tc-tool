@@ -73,6 +73,18 @@ export default class Lifecycle {
   }
 
   /**
+   * Convenience method for triggering a lifecycle method that must exist.
+   * This executes {@link assertExists} before {@link trigger}
+   * @param {string} method - the name of the lifecycle method.
+   * @param {*} [args] - optional method arguments
+   * @return {*}
+   */
+  triggerForced(method, ...args) {
+    this.assertExists(method);
+    return this.trigger(method, ...args);
+  }
+
+  /**
    * Asserts the existence of a lifecycle method.
    * @param {string} method - the name of the lifecycle method.
    * @throws an error if the lifecycle method does not exist.
