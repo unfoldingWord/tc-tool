@@ -10,12 +10,14 @@ export default class ApiLifecycle extends Lifecycle {
    * Creates a new api lifecycle instance.
    * @param {ToolApi} api - An instance of the tool api
    * @param {*} store - the tool's redux store
+   * @param {string} namespace - the name of the tool
    */
-  constructor(api, store) {
+  constructor(api, store, namespace) {
     super(api);
-    this.store = store;
-    this.prevState = undefined;
-    this.prevStateThrottled = undefined;
+    this._namespace = namespace;
+    this._store = store;
+    this._prevState = undefined;
+    this._prevStateThrottled = undefined;
 
     this.handleStoreChangeThrottled = this.handleStoreChangeThrottled.bind(
       this);
@@ -24,6 +26,14 @@ export default class ApiLifecycle extends Lifecycle {
     this.triggerWillDisconnect = this.triggerWillDisconnect.bind(this);
     this.triggerDidCatch = this.triggerDidCatch.bind(this);
     this.triggerBlocking = this.triggerBlocking.bind(this);
+  }
+
+  /**
+   * Returns the name of the tool
+   * @return {string}
+   */
+  name() {
+    return this._namespace;
   }
 
   /**
@@ -40,13 +50,13 @@ export default class ApiLifecycle extends Lifecycle {
    * to the disk without thrashing your computer.
    */
   handleStoreChangeThrottled() {
-    const nextState = this.store.getState();
+    const nextState = this._store.getState();
     this.triggerBlocking('stateChangeThrottled', (e) => {
-      this.prevStateThrottled = nextState;
+      this._prevStateThrottled = nextState;
       if (e) {
         this.triggerDidCatch(e);
       }
-    }, nextState, this.prevStateThrottled);
+    }, nextState, this._prevStateThrottled);
   }
 
   /**
@@ -54,13 +64,13 @@ export default class ApiLifecycle extends Lifecycle {
    * the lifecycle method.
    */
   handleStoreChange() {
-    const nextState = this.store.getState();
+    const nextState = this._store.getState();
     this.triggerBlocking('stateChanged', (e) => {
-      this.prevState = nextState;
+      this._prevState = nextState;
       if (e) {
         this.triggerDidCatch(e);
       }
-    }, nextState, this.prevState);
+    }, nextState, this._prevState);
   }
 
   /**
@@ -68,9 +78,9 @@ export default class ApiLifecycle extends Lifecycle {
    * This also subscribes to the store.
    */
   triggerWillConnect() {
-    this.unsubscribe = this.store.subscribe(this.handleStoreChange);
+    this.unsubscribe = this._store.subscribe(this.handleStoreChange);
     // TRICKY: wait one second before calling, but no more than 5 seconds.
-    this.unsubscribeSync = this.store.subscribe(
+    this.unsubscribeSync = this._store.subscribe(
       debounce(() => {
         return this.handleStoreChangeThrottled();
       }, 1000, 5000));

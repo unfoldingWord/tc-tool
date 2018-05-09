@@ -52,7 +52,7 @@ const connectTool = (namespace, options={}) => {
     // inject redux into the api and bind the lifecycle methods.
     let toolApi = undefined;
     if(api) {
-      toolApi = new ApiLifecycle(api, store);
+      toolApi = new ApiLifecycle(api, store, namespace);
     }
 
     /**
