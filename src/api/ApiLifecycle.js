@@ -1,5 +1,6 @@
 import Lifecycle from './Lifecycle';
 import throttle from 'lodash/throttle';
+import * as names from './lifecycleNames';
 
 /**
  * Lifecycle methods for the tool api
@@ -10,13 +11,16 @@ export default class ApiLifecycle extends Lifecycle {
    * Creates a new api lifecycle instance.
    * @param {ToolApi} api - An instance of the tool api
    * @param {*} store - the tool's redux store
-   * @param {string} namespace - the name of the tool
+   * @param {func} [preprocessor] - optional callback to pre-process lifecycle method calls
    */
-  constructor(api, store, namespace) {
-    super(ApiLifecycle._bindToString(api, namespace));
-    this._namespace = namespace;
+  constructor(api, store, preprocessor = undefined) {
+    super(api);
     this._store = store;
     this._api = api;
+    this._preprocessor = preprocessor;
+    this._api.context = {
+      store
+    };
     this._prevState = undefined;
     this._prevStateThrottled = undefined;
 
@@ -32,23 +36,25 @@ export default class ApiLifecycle extends Lifecycle {
   }
 
   /**
-   * Binds a value to an object's toString method.
-   * @param {object} obj - the object receiving the toString method.
-   * @param {*} name - value to return as toString()
-   * @return {*}
-   * @private
-   */
-  static _bindToString(obj, name) {
-    obj.toString = () => name;
-    return obj;
-  }
-
-  /**
    * Returns the name of the tool
    * @return {string}
    */
   name() {
-    return this._namespace;
+    return this._api.toString();
+  }
+
+  /**
+   * Pre-process lifecycle method arguments
+   * @param method
+   * @param args
+   * @return {[]} - an array of processed arguments
+   * @private
+   */
+  _preprocess(method, ...args) {
+    if (this._preprocessor) {
+      return this._preprocessor(method, ...args);
+    }
+    return args;
   }
 
   /**
@@ -56,7 +62,7 @@ export default class ApiLifecycle extends Lifecycle {
    * @param e
    */
   triggerDidCatch(e) {
-    const method = 'toolDidCatch';
+    const method = names.DID_CATCH;
     if (!this.methodExists(method)) {
       console.error('Caught tool API lifecycle error.\n',
         `You should consider adding the lifecycle method "${method}" to "${this.name()}" so you can handle these errors yourself.\n`,
@@ -73,14 +79,45 @@ export default class ApiLifecycle extends Lifecycle {
   }
 
   /**
+   * Requests extra props from the api
+   * @private
+   * @return {*} - the mapped props
+   */
+  _triggerMapToProps() {
+    let dispatchProps = this.trigger(names.MAP_DISPATCH_TO_PROPS,
+      this._store.dispatch);
+    let stateProps = this.trigger(names.MAP_STATE_TO_PROPS,
+      this._store.getState());
+
+    if (!dispatchProps) {
+      dispatchProps = {};
+    }
+    if (!stateProps) {
+      stateProps = {};
+    }
+
+    return {
+      ...dispatchProps,
+      ...stateProps
+    };
+  }
+
+  /**
    * Attaches props to the api.
    * After the lifecycle method is executed the previous api props
    * will be replaced with the new ones.
    * @param {*} props
    */
   triggerWillReceiveProps(props) {
-    const result = this.trigger('toolWillReceiveProps', props);
-    this._api.props = props;
+    const args = this._preprocess(names.WILL_RECEIVE_PROPS, props);
+    const processedProps = args.pop();
+    const mappedProps = this._triggerMapToProps();
+    const newProps = {
+      ...processedProps,
+      ...mappedProps
+    };
+    const result = this.trigger(names.WILL_RECEIVE_PROPS, newProps);
+    this._api.props = newProps;
     return result;
   }
 
@@ -91,7 +128,7 @@ export default class ApiLifecycle extends Lifecycle {
    */
   handleStoreChangeThrottled() {
     const nextState = this._store.getState();
-    this.triggerBlocking('stateChangeThrottled', (e) => {
+    this.triggerBlocking(names.STATE_CHANGE_THROTTLED, (e) => {
       this._prevStateThrottled = nextState;
       if (e) {
         this.triggerDidCatch(e);
@@ -105,7 +142,7 @@ export default class ApiLifecycle extends Lifecycle {
    */
   handleStoreChange() {
     const nextState = this._store.getState();
-    this.triggerBlocking('stateChanged', (e) => {
+    this.triggerBlocking(names.STATE_CHANGED, (e) => {
       this._prevState = nextState;
       if (e) {
         this.triggerDidCatch(e);
@@ -128,7 +165,7 @@ export default class ApiLifecycle extends Lifecycle {
         return this.handleStoreChangeThrottled();
       }, 1000, {leading: false, trailing: true}));
 
-    return this.trigger('toolWillConnect');
+    return this.trigger(names.WILL_CONNECT);
   }
 
   /**
@@ -142,6 +179,6 @@ export default class ApiLifecycle extends Lifecycle {
     if (this.unsubscribeSync) {
       this.unsubscribeSync();
     }
-    return this.trigger('toolWillDisconnect');
+    return this.trigger(names.WILL_DISCONNECT);
   }
 }

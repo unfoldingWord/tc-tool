@@ -7,10 +7,31 @@ import BrokenScreen from './BrokenScreen';
 import {
   getActiveLanguage,
   getLocaleLoaded,
-  getTranslate,
+  getTranslate
 } from './state/reducers';
 import fs from 'fs-extra';
 import ApiLifecycle from './api/ApiLifecycle';
+import * as names from './api/lifecycleNames';
+
+/**
+ * Builds the locale tools
+ * @param state
+ * @param {bool} hasLocale - indicates if the locale is enabled
+ * @return {*}
+ */
+const getLocaleProps = (state, hasLocale) => {
+  let translate = undefined;
+  let currentLanguage = undefined;
+  if (hasLocale) {
+    translate = getTranslate(state);
+    const lang = getActiveLanguage(state);
+    currentLanguage = lang ? lang.code : undefined;
+  }
+  return {
+    translate,
+    currentLanguage
+  };
+};
 
 /**
  * This HOC initializes a store and locale for the tool.
@@ -20,7 +41,7 @@ import ApiLifecycle from './api/ApiLifecycle';
  * @param options
  * @return {function(*)}
  */
-const connectTool = (namespace, options={}) => {
+const connectTool = (namespace, options = {}) => {
 
   /**
    * @param {string} [localeDir] - directory containing the interface locale files
@@ -28,7 +49,7 @@ const connectTool = (namespace, options={}) => {
    * @param {[]} [middlewares] - an array of middleware to inject into the store.
    * @param {*} [api] - The tool's api class
    */
-  const {localeDir, reducer=undefined, middlewares=undefined, api=undefined} = options;
+  const {localeDir, reducer = undefined, middlewares = undefined, api = undefined} = options;
 
   if (localeDir && typeof localeDir !== 'string') {
     throw Error(
@@ -38,7 +59,7 @@ const connectTool = (namespace, options={}) => {
   return (WrappedComponent) => {
     console.info('Booting tool...');
     const hasLocale = localeDir && fs.existsSync(localeDir);
-    if(!localeDir) {
+    if (!localeDir) {
       console.warn('You should consider localizing this tool.');
     } else if (!hasLocale) {
       console.warn(`No locale found at ${localeDir}`);
@@ -51,11 +72,19 @@ const connectTool = (namespace, options={}) => {
 
     // inject redux into the api and bind the lifecycle methods.
     let toolApi = undefined;
-    if(api) {
-      api.context = {
-        store
-      };
-      toolApi = new ApiLifecycle(api, store, namespace);
+    if (api) {
+      api.toString = () => namespace;
+      toolApi = new ApiLifecycle(api, store, (method, ...args) => {
+        // pre-process lifecycle methods
+        if (method === names.MAP_STATE_TO_PROPS) {
+          const props = args.pop();
+          const newProps = {
+            ...props,
+            ...getLocaleProps(store.getState(), hasLocale)
+          };
+          return [newProps];
+        }
+      });
     }
 
     /**
@@ -70,7 +99,7 @@ const connectTool = (namespace, options={}) => {
         this.state = {
           broken: false,
           error: null,
-          info: null,
+          info: null
         };
       }
 
@@ -94,7 +123,7 @@ const connectTool = (namespace, options={}) => {
         this.setState({
           broken: true,
           error,
-          info,
+          info
         });
       }
 
@@ -148,21 +177,12 @@ const connectTool = (namespace, options={}) => {
         if (brokenScreen) {
           return brokenScreen;
         } else {
-          // TRICKY: load locale tools if enabled
-          let translate = undefined;
-          let currentLanguage = undefined;
-          if (hasLocale) {
-            translate = getTranslate(store.getState());
-            const lang = getActiveLanguage(store.getState());
-            currentLanguage = lang ? lang.code : undefined;
-          }
           return (
             <Provider store={store}>
               <WrappedComponent
-                translate={translate}
-                currentLanguage={currentLanguage}
-                toolApi={toolApi}
                 {...this.props}
+                toolApi={toolApi}
+                {...getLocaleProps(store.getState(), hasLocale)}
               />
             </Provider>
           );
@@ -177,7 +197,7 @@ const connectTool = (namespace, options={}) => {
       currentToolViews: PropTypes.object.isRequired,
       resourcesReducer: PropTypes.object.isRequired,
       contextIdReducer: PropTypes.object.isRequired,
-      appLanguage: PropTypes.string.isRequired,
+      appLanguage: PropTypes.string.isRequired
     };
 
     return {

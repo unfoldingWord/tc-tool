@@ -15,9 +15,13 @@ Each api has several "lifecycle methods" that you can override to run code at pa
 
 * `toolWillConnect`
 * `toolWillReceiveProps`
-* `stateChanged`
-* `stateChangeThrottled` a throttled version of `stateChanged`. This will only execute ever few seconds instead of after every state change.
+* `mapDispatchToProps`
+* `mapStateToProps`
 * `toolWillDisconnect`
+* `toolDidCatch`
+* `stateChanged`
+* `stateChangeThrottled` - same as `stateChanged` but throttled to once a second.
+
 
 ## Calling API methods
 

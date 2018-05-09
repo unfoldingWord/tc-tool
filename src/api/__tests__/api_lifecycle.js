@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 
 const middlewares = [];
 const mockStore = configureMockStore(middlewares);
+import * as names from '../lifecycleNames';
 
 describe('Lifecycle', () => {
   let store;
@@ -14,8 +15,11 @@ describe('Lifecycle', () => {
       hello: () => 'world',
       toolWillConnect: () => 'connected',
       toolWillDisconnect: () => 'disconnected',
+      mapStateToProps: jest.fn(),
+      mapDispatchToProps: jest.fn(),
       stateChanged: jest.fn(),
-      stateChangeThrottled: jest.fn()
+      stateChangeThrottled: jest.fn(),
+      toolWillReceiveProps: jest.fn()
     };
     obj.stateChanged.mockReset();
     obj.stateChangeThrottled.mockReset();
@@ -26,11 +30,46 @@ describe('Lifecycle', () => {
     expect(wrappedObj.trigger('hello')).toEqual('world');
   });
 
+  it('executes receive props lifecycle with mapped state to props', () => {
+    obj.mapStateToProps = state => {
+      return {
+        hello: 'world'
+      };
+    };
+    const wrappedObj = new ApiLifecycle(obj, store);
+    const props = {foo: 'bar'};
+    wrappedObj.triggerWillReceiveProps(props);
+    expect(obj.props).toEqual({
+      foo: 'bar',
+      hello: 'world'
+    });
+  });
+
   it('executes receive props lifecycle', () => {
     const wrappedObj = new ApiLifecycle(obj, store);
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
     expect(obj.props).toEqual(props);
+    expect(obj.mapStateToProps).toBeCalled();
+    expect(obj.mapDispatchToProps).toBeCalled();
+    expect(obj.toolWillReceiveProps).toBeCalled();
+  });
+
+  it('pre-processes props to receive props lifecycle', () => {
+    const wrappedObj = new ApiLifecycle(obj, store, (method, ...args) => {
+      if(method === names.WILL_RECEIVE_PROPS) {
+        const props = args.pop();
+        props.hello = 'world';
+        return [props];
+      }
+      return args;
+    });
+    const props = {foo: 'bar'};
+    wrappedObj.triggerWillReceiveProps(props);
+    expect(obj.props).toEqual({
+      foo: 'bar',
+      hello: 'world'
+    });
   });
 
   it('executes the connect lifecycle', () => {
