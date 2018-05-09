@@ -1,6 +1,6 @@
 # Tool Api
 
-One amazing feature `connectTool` is the ability to expose an api to the rest of the application including other tools.
+One amazing feature of `connectTool` is the ability to expose an api to the rest of the application including other tools.
 Doing so is super easy. Let's assume you have a class named `MyApi`.
 
 ```js

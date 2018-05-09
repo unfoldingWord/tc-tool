@@ -3,5 +3,8 @@
  * These api methods will be available to tC and other tools.
  */
 export default class ToolApi {
-
+  constructor() {
+    this.props = {};
+    this.context = {};
+  }
 }

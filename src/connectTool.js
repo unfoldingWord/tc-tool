@@ -52,6 +52,9 @@ const connectTool = (namespace, options={}) => {
     // inject redux into the api and bind the lifecycle methods.
     let toolApi = undefined;
     if(api) {
+      api.context = {
+        store
+      };
       toolApi = new ApiLifecycle(api, store, namespace);
     }
 
