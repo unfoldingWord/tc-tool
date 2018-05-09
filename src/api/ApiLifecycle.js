@@ -83,7 +83,7 @@ export default class ApiLifecycle extends Lifecycle {
     this.unsubscribeSync = this._store.subscribe(
       debounce(() => {
         return this.handleStoreChangeThrottled();
-      }, 1000, 5000));
+      }, 1000, {maxWait: 5000}));
     return this.trigger('toolWillConnect');
   }
 
