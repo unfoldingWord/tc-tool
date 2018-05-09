@@ -7,10 +7,12 @@ import BrokenScreen from './BrokenScreen';
 import {
   getActiveLanguage,
   getLocaleLoaded,
-  getTranslate
+  getTranslate,
+  isToolLoading
 } from './state/reducers';
 import fs from 'fs-extra';
 import ApiLifecycle from './api/ApiLifecycle';
+import {setToolLoading, setToolReady} from './state/actions/loading';
 
 /**
  * Builds the locale tools
@@ -31,6 +33,15 @@ const getLocaleProps = (state, hasLocale) => {
     currentLanguage
   };
 };
+
+/**
+ * Wraps a function with another function.
+ * This is used for wrapping dispatch around a function.
+ * @param {func} dispatch
+ * @param {func} func
+ * @return {func}
+ */
+const wrapFunc = (dispatch, func) => (...args) => dispatch(func(...args));
 
 /**
  * This HOC initializes a store and locale for the tool.
@@ -73,11 +84,13 @@ const connectTool = (namespace, options = {}) => {
     let toolApi = undefined;
     if (api) {
       api.toString = () => namespace;
-      toolApi = new ApiLifecycle(api, store, props => {
-        // pre-process props
+      toolApi = new ApiLifecycle(api, store, (state, dispatch, props) => {
+        // pre-process props before sending them to the tool
         return {
           ...props,
-          ...getLocaleProps(store.getState(), hasLocale)
+          ...getLocaleProps(state, hasLocale),
+          setToolLoading: wrapFunc(dispatch, setToolLoading),
+          setToolReady: wrapFunc(dispatch, setToolReady)
         };
       });
     }
@@ -135,8 +148,12 @@ const connectTool = (namespace, options = {}) => {
        * @private
        */
       _isLoaded() {
+        const state = store.getState();
+        const toolIsLoaded = !isToolLoading(state);
         // TRICKY: if locale doesn't exist skip to finished loading
-        return !hasLocale || getLocaleLoaded(store.getState());
+        const localeIsLoaded = !hasLocale || getLocaleLoaded(state);
+
+        return toolIsLoaded || localeIsLoaded;
       }
 
       /**

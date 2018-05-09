@@ -1,13 +1,22 @@
 import { combineReducers } from 'redux';
 import * as fromReactLocalizeRedux from 'react-localize-redux';
 import localeSettings, * as fromLocaleSettings from './localeSettings';
+import loading, * as fromLoading from './loading';
 
 const reducers = combineReducers({
   locale: fromReactLocalizeRedux.localeReducer,
-  localeSettings
+  localeSettings,
+  loading
 });
 
 export default reducers;
+
+/**
+ * Checks if the tool is currently loading
+ * @param state
+ */
+export const isToolLoading = state =>
+  fromLoading.getIsLoading(state.internal.loading);
 
 /**
  * Returns the localization function

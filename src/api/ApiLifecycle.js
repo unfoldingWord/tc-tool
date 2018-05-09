@@ -53,7 +53,8 @@ export default class ApiLifecycle extends Lifecycle {
    */
   _preprocessProps(props) {
     if (this._propPreProcessor) {
-      const result = this._propPreProcessor(props);
+      const result = this._propPreProcessor(this._store.getState(),
+        this._store.dispatch, props);
       if (result) {
         return result;
       }
