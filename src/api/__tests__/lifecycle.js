@@ -8,11 +8,18 @@ describe('Lifecycle', () => {
     wrappedObj = new Lifecycle({
       hello: () => 'world',
       withArgs: message => message,
+      blockingScalar: spy => {
+        spy();
+        return 1;
+      },
       blocking: (spy) => {
         spy();
         return new Promise(resolve => {
           resolver = resolve;
         });
+      },
+      blockingVoid: spy => {
+        spy();
       }
     });
   });
@@ -37,7 +44,7 @@ describe('Lifecycle', () => {
     expect(() => wrappedObj.trigger('_privateMethod')).toThrow();
   });
 
-  it('blocks a method', () => {
+  it('blocks a method that returns a promise', () => {
     const spy = jest.fn();
     const callback = jest.fn();
     wrappedObj.triggerBlocking('blocking', callback, spy);
@@ -59,5 +66,31 @@ describe('Lifecycle', () => {
     const spy3 = jest.fn();
     wrappedObj.triggerBlocking('blocking', jest.fn(), spy3);
     expect(spy3).not.toBeCalled();
+  });
+
+  it('blocks a method that returns a scalar', () => {
+    const spy = jest.fn();
+    const callback = jest.fn();
+    wrappedObj.triggerBlocking('blockingScalar', callback, spy);
+    expect(spy).toBeCalled();
+    expect(callback).toBeCalled();
+
+    // trigger another to ensure not blocked
+    const spy2 = jest.fn();
+    wrappedObj.triggerBlocking('blockingScalar', jest.fn(), spy2);
+    expect(spy2).toBeCalled();
+  });
+
+  it('blocks a method that returns nothing', () => {
+    const spy = jest.fn();
+    const callback = jest.fn();
+    wrappedObj.triggerBlocking('blockingVoid', callback, spy);
+    expect(spy).toBeCalled();
+    expect(callback).toBeCalled();
+
+    // trigger another to ensure not blocked
+    const spy2 = jest.fn();
+    wrappedObj.triggerBlocking('blockingVoid', jest.fn(), spy2);
+    expect(spy2).toBeCalled();
   });
 });
