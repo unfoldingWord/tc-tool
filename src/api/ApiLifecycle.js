@@ -33,6 +33,8 @@ export default class ApiLifecycle extends Lifecycle {
     this.triggerBlocking = this.triggerBlocking.bind(this);
     this.triggerWillReceiveProps = this.triggerWillReceiveProps.bind(this);
     this.name = this.name.bind(this);
+    this._preprocess = this._preprocess.bind(this);
+    this._triggerMapToProps = this._triggerMapToProps.bind(this);
   }
 
   /**
@@ -168,8 +170,7 @@ export default class ApiLifecycle extends Lifecycle {
     };
 
     this.unsubscribe = this._store.subscribe(this.handleStoreChange);
-    // TRICKY: wait one second before calling, but no more than 5 seconds.
-    this.unsubscribeSync = this._store.subscribe(
+    this.unsubscribeThrottled = this._store.subscribe(
       throttle(() => {
         return this.handleStoreChangeThrottled();
       }, 1000, {leading: false, trailing: true}));
@@ -185,8 +186,8 @@ export default class ApiLifecycle extends Lifecycle {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
-    if (this.unsubscribeSync) {
-      this.unsubscribeSync();
+    if (this.unsubscribeThrottled) {
+      this.unsubscribeThrottled();
     }
     return this.trigger(names.WILL_DISCONNECT);
   }
