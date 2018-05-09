@@ -11,7 +11,6 @@ import {
 } from './state/reducers';
 import fs from 'fs-extra';
 import ApiLifecycle from './api/ApiLifecycle';
-import * as names from './api/lifecycleNames';
 
 /**
  * Builds the locale tools
@@ -74,16 +73,12 @@ const connectTool = (namespace, options = {}) => {
     let toolApi = undefined;
     if (api) {
       api.toString = () => namespace;
-      toolApi = new ApiLifecycle(api, store, (method, ...args) => {
-        // pre-process lifecycle methods
-        if (method === names.MAP_STATE_TO_PROPS) {
-          const props = args.pop();
-          const newProps = {
-            ...props,
-            ...getLocaleProps(store.getState(), hasLocale)
-          };
-          return [newProps];
-        }
+      toolApi = new ApiLifecycle(api, store, props => {
+        // pre-process props
+        return {
+          ...props,
+          ...getLocaleProps(store.getState(), hasLocale)
+        };
       });
     }
 

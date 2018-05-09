@@ -56,13 +56,11 @@ describe('Lifecycle', () => {
   });
 
   it('pre-processes props to receive props lifecycle', () => {
-    const wrappedObj = new ApiLifecycle(obj, store, (method, ...args) => {
-      if(method === names.WILL_RECEIVE_PROPS) {
-        const props = args.pop();
-        props.hello = 'world';
-        return [props];
-      }
-      return args;
+    const wrappedObj = new ApiLifecycle(obj, store, (props) => {
+      return {
+        ...props,
+        hello: 'world'
+      };
     });
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);

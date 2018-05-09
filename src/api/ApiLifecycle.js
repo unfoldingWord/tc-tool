@@ -11,13 +11,13 @@ export default class ApiLifecycle extends Lifecycle {
    * Creates a new api lifecycle instance.
    * @param {ToolApi} api - An instance of the tool api
    * @param {*} store - the tool's redux store
-   * @param {func} [preprocessor] - optional callback to pre-process lifecycle method calls
+   * @param {func} [propPreProcessor] - optional callback to pre-process props
    */
-  constructor(api, store, preprocessor = undefined) {
+  constructor(api, store, propPreProcessor = undefined) {
     super(api);
     this._store = store;
     this._api = api;
-    this._preprocessor = preprocessor;
+    this._propPreProcessor = propPreProcessor;
     this._api.context = {
       store
     };
@@ -33,7 +33,7 @@ export default class ApiLifecycle extends Lifecycle {
     this.triggerBlocking = this.triggerBlocking.bind(this);
     this.triggerWillReceiveProps = this.triggerWillReceiveProps.bind(this);
     this.name = this.name.bind(this);
-    this._preprocess = this._preprocess.bind(this);
+    this._preprocessProps = this._preprocessProps.bind(this);
     this._triggerMapToProps = this._triggerMapToProps.bind(this);
   }
 
@@ -47,21 +47,18 @@ export default class ApiLifecycle extends Lifecycle {
 
   /**
    * Pre-process lifecycle method arguments
-   * @param method
-   * @param args
+   * @param props
    * @return {[]} - an array of processed arguments
    * @private
    */
-  _preprocess(method, ...args) {
-    // TODO: I'm not very happy with this implementation, but it works for now.
-    // we probably just need a single props pre-processor.
-    if (this._preprocessor) {
-      const result = this._preprocessor(method, ...args);
-      if(result) {
+  _preprocessProps(props) {
+    if (this._propPreProcessor) {
+      const result = this._propPreProcessor(props);
+      if (result) {
         return result;
       }
     }
-    return args;
+    return props;
   }
 
   /**
@@ -92,10 +89,12 @@ export default class ApiLifecycle extends Lifecycle {
    * @return {*} - the mapped props
    */
   _triggerMapToProps(props) {
+    const processedProps = this._preprocessProps(props);
+
     let dispatchProps = this.trigger(names.MAP_DISPATCH_TO_PROPS,
-      this._store.dispatch, props);
+      this._store.dispatch, processedProps);
     let stateProps = this.trigger(names.MAP_STATE_TO_PROPS,
-      this._store.getState(), props);
+      this._store.getState(), processedProps);
 
     if (!dispatchProps) {
       dispatchProps = {};
@@ -105,6 +104,7 @@ export default class ApiLifecycle extends Lifecycle {
     }
 
     return {
+      ...processedProps,
       ...dispatchProps,
       ...stateProps
     };
@@ -117,11 +117,9 @@ export default class ApiLifecycle extends Lifecycle {
    * @param {*} props
    */
   triggerWillReceiveProps(props) {
-    const args = this._preprocess(names.WILL_RECEIVE_PROPS, props);
-    const processedProps = args.pop();
-    const mappedProps = this._triggerMapToProps(processedProps);
+    const mappedProps = this._triggerMapToProps(props);
     const newProps = {
-      ...processedProps,
+      ...props,
       ...mappedProps
     };
     const result = this.trigger(names.WILL_RECEIVE_PROPS, newProps);
@@ -164,11 +162,9 @@ export default class ApiLifecycle extends Lifecycle {
    * @param {*} props - props that will be attached to the tool before it connects
    */
   triggerWillConnect(props) {
-    const args = this._preprocess(names.WILL_CONNECT, props);
-    const processedProps = args.pop();
-    const mappedProps = this._triggerMapToProps(processedProps);
+    const mappedProps = this._triggerMapToProps(props);
     this._api.props = {
-      ...processedProps,
+      ...props,
       ...mappedProps
     };
 
