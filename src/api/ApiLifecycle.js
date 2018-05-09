@@ -82,14 +82,15 @@ export default class ApiLifecycle extends Lifecycle {
 
   /**
    * Requests extra props from the api
+   * @param {*} props - the new props that will be mapped against
    * @private
    * @return {*} - the mapped props
    */
-  _triggerMapToProps() {
+  _triggerMapToProps(props) {
     let dispatchProps = this.trigger(names.MAP_DISPATCH_TO_PROPS,
-      this._store.dispatch);
+      this._store.dispatch, props);
     let stateProps = this.trigger(names.MAP_STATE_TO_PROPS,
-      this._store.getState());
+      this._store.getState(), props);
 
     if (!dispatchProps) {
       dispatchProps = {};
@@ -160,7 +161,7 @@ export default class ApiLifecycle extends Lifecycle {
   triggerWillConnect(props) {
     const args = this._preprocess(names.WILL_CONNECT, props);
     const processedProps = args.pop();
-    const mappedProps = this._triggerMapToProps();
+    const mappedProps = this._triggerMapToProps(processedProps);
     this._api.props = {
       ...processedProps,
       ...mappedProps
