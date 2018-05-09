@@ -7,7 +7,7 @@
     "test": "eslint ./src && jest",
     "build": "babel src --out-dir dist --ignore '**/__tests__,**/__mocks__'",
     "prepublishOnly": "npm test && npm run build",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
