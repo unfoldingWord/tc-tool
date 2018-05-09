@@ -63,6 +63,17 @@ describe('Lifecycle', () => {
         expect(obj.stateChangeThrottled.mock.calls.length).toBe(2);
         resolve();
       }, 1000);
+    }).then(() => {
+        store.dispatch({ type: 'ANY_ACTION'});
+        store.dispatch({ type: 'ANY_ACTION'});
+        store.dispatch({ type: 'ANY_ACTION'});
+        return new Promise(resolve => {
+            setTimeout(() => {
+                // TRICKY: give it some time to resolve.
+                expect(obj.stateChangeThrottled.mock.calls.length).toBe(3);
+                resolve();
+            }, 1000);
+        });
     });
   });
 });

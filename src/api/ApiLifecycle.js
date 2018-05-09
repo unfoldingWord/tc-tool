@@ -1,5 +1,5 @@
 import Lifecycle from './Lifecycle';
-import debounce from 'lodash/debounce';
+import throttle from 'lodash/throttle';
 
 /**
  * Lifecycle methods for the tool api
@@ -81,9 +81,9 @@ export default class ApiLifecycle extends Lifecycle {
     this.unsubscribe = this._store.subscribe(this.handleStoreChange);
     // TRICKY: wait one second before calling, but no more than 5 seconds.
     this.unsubscribeSync = this._store.subscribe(
-      debounce(() => {
+      throttle(() => {
         return this.handleStoreChangeThrottled();
-      }, 1000, {maxWait: 5000}));
+      }, 1000, {leading: false, trailing: true}));
     return this.trigger('toolWillConnect');
   }
 
