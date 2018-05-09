@@ -56,7 +56,10 @@ export default class ApiLifecycle extends Lifecycle {
     // TODO: I'm not very happy with this implementation, but it works for now.
     // we probably just need a single props pre-processor.
     if (this._preprocessor) {
-      return this._preprocessor(method, ...args);
+      const result = this._preprocessor(method, ...args);
+      if(result) {
+        return result;
+      }
     }
     return args;
   }
