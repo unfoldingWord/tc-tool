@@ -119,7 +119,7 @@ export default class ApiLifecycle extends Lifecycle {
   triggerWillReceiveProps(props) {
     const args = this._preprocess(names.WILL_RECEIVE_PROPS, props);
     const processedProps = args.pop();
-    const mappedProps = this._triggerMapToProps();
+    const mappedProps = this._triggerMapToProps(processedProps);
     const newProps = {
       ...processedProps,
       ...mappedProps
