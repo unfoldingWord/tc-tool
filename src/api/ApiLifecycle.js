@@ -16,6 +16,7 @@ export default class ApiLifecycle extends Lifecycle {
     super(ApiLifecycle._bindToString(api, namespace));
     this._namespace = namespace;
     this._store = store;
+    this._api = api;
     this._prevState = undefined;
     this._prevStateThrottled = undefined;
 
@@ -55,18 +56,30 @@ export default class ApiLifecycle extends Lifecycle {
   triggerDidCatch(e) {
     const method = 'toolDidCatch';
     if (!this.methodExists(method)) {
-      console.error('Caught API lifecycle error.\n',
-        `You should consider adding the lifecycle method "${method}" so you can handle these errors yourself.\n`,
+      console.error('Caught tool API lifecycle error.\n',
+        `You should consider adding the lifecycle method "${method}" to "${this.name()}" so you can handle these errors yourself.\n`,
         e);
     } else {
       // pass error handling to api
       try {
         this.trigger(method, e);
       } catch (innerError) {
-        console.error('Caught API lifecycle error.\n',
+        console.error('Caught tool API lifecycle error.\n',
           `You shouldn't throw errors in "${method}"!\n`, innerError);
       }
     }
+  }
+
+  /**
+   * Attaches props to the api.
+   * After the lifecycle method is executed the previous api props
+   * will be replaced with the new ones.
+   * @param {*} props
+   */
+  triggerWillReceiveProps(props) {
+    const result = this.trigger('toolWillReceiveProps', props);
+    this._api.props = props;
+    return result;
   }
 
   /**
@@ -101,14 +114,18 @@ export default class ApiLifecycle extends Lifecycle {
   /**
    * Convenience method for triggering the connect lifecycle.
    * This also subscribes to the store.
+   * @param {*} props - props that will be attached to the tool before it connects
    */
-  triggerWillConnect() {
+  triggerWillConnect(props) {
+    this._api.props = props;
+
     this.unsubscribe = this._store.subscribe(this.handleStoreChange);
     // TRICKY: wait one second before calling, but no more than 5 seconds.
     this.unsubscribeSync = this._store.subscribe(
       throttle(() => {
         return this.handleStoreChangeThrottled();
       }, 1000, {leading: false, trailing: true}));
+
     return this.trigger('toolWillConnect');
   }
 
