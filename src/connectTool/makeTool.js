@@ -91,8 +91,9 @@ export const makeTool = (
           <Provider store={store}>
             <WrappedComponent
               tc={this.props}
-              toolApi={api}
+              {...this.props} // TRICKY: this is for backwards compatibility until all tools are updated.
               {...localeProps}
+              toolApi={api}
             />
           </Provider>
         );
