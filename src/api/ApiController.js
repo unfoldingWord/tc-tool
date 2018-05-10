@@ -3,6 +3,17 @@ import throttle from 'lodash/throttle';
 import * as names from './lifecycleNames';
 import {makeLocaleProps} from '../connectTool';
 import {loadLocalization} from '../state/actions/locale';
+import {setToolLoading, setToolReady} from '../state/actions/loading';
+
+/**
+ * Wraps a function with another function.
+ * This is used for wrapping dispatch around a function.
+ * @param {func} dispatch
+ * @param {func} func
+ * @return {func}
+ */
+export const wrapFunc = (dispatch, func) => (...args) => dispatch(
+  func(...args));
 
 /**
  * Binds lifecycle methods to a {@link ToolApi}
@@ -21,8 +32,6 @@ export default class ApiController extends Lifecycle {
     this._api = api;
     this._localeDir = localeDir;
     this._hasLocale = Boolean(localeDir);
-    // this._preprocessor = propPreProcessor;
-    // this._preprocessors = {};
     this._api.context = {
       store
     };
@@ -39,21 +48,9 @@ export default class ApiController extends Lifecycle {
     this.triggerWillReceiveProps = this.triggerWillReceiveProps.bind(this);
     this.name = this.name.bind(this);
     this._preprocessProps = this._preprocessProps.bind(this);
+    this._preprocessConnect = this._preprocessConnect.bind(this);
     this._triggerMapToProps = this._triggerMapToProps.bind(this);
   }
-
-  /**
-   * Subscribes a handler to pre-process a lifecycle method.
-   * Pre-processing is performed in order of subscription.
-   * @param {string} method - the name of the lifecycle method being subscribed to
-   * @param callback
-   */
-  // subscribePreProcessor(method, callback) {
-  //   if(!(method in this._preprocessors)) {
-  //     this._preprocessors[method] = [];
-  //   }
-  //   this._preprocessors[method].push(callback);
-  // }
 
   /**
    * Returns the name of the tool
@@ -72,17 +69,12 @@ export default class ApiController extends Lifecycle {
   _preprocessProps(props) {
     const state = this._store.getState();
     const localeProps = this._hasLocale ? makeLocaleProps(state) : {};
-    // if (this._preprocessor) {
-    //   const result = this._preprocessor(this._store.getState(),
-    //     this._store.dispatch, props);
-    //   if (result) {
-    //     return result;
-    //   }
-    // }
 
     return {
       ...props,
-      ...localeProps
+      ...localeProps,
+      setToolReady: wrapFunc(this._store.dispatch, setToolReady),
+      setToolLoading: wrapFunc(this._store.dispatch, setToolLoading)
     };
   }
 
@@ -127,8 +119,6 @@ export default class ApiController extends Lifecycle {
    */
   _triggerMapToProps(props) {
     const processedProps = this._preprocessProps(props);
-    // const state = this._store.getState();
-    // const localeProps = makeLocaleProps(state, )
 
     let dispatchProps = this.trigger(names.MAP_DISPATCH_TO_PROPS,
       this._store.dispatch, processedProps);

@@ -1,3 +1,4 @@
+jest.unmock('react-localize-redux');
 import * as actions from '../locale';
 import * as types from '../types';
 import configureMockStore from 'redux-mock-store';

@@ -1,7 +1,7 @@
 jest.unmock('react-localize-redux');
 jest.mock('../state/actions/locale');
 import React from 'react';
-import connectTool, {wrapFunc} from '../connectTool';
+import connectTool from '../connectTool';
 import {configure, mount} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import path from 'path';
@@ -25,15 +25,6 @@ class BrokenComponent extends React.Component {
 }
 
 const localeDir = path.join(__dirname, './locale');
-
-describe('wrap func', () => {
-  it('wraps a function with another function', () => {
-    const parent = arg => `${arg} world`;
-    const child = message => message;
-    const wrapped = wrapFunc(parent, child);
-    expect(wrapped('hello')).toEqual('hello world');
-  });
-});
 
 describe('props', () => {
   beforeAll(() => {

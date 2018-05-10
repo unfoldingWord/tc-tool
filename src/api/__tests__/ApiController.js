@@ -1,9 +1,18 @@
-import ApiController from '../ApiController';
+import ApiController, {wrapFunc} from '../ApiController';
 import configureMockStore from 'redux-mock-store';
-import {translate as mockTranslate} from '../../../__mocks__/react-localize-redux';
+import {translate as mockTranslate} from 'react-localize-redux';
 
 const middlewares = [];
 const mockStore = configureMockStore(middlewares);
+
+describe('wrap func', () => {
+  it('wraps a function with another function', () => {
+    const parent = arg => `${arg} world`;
+    const child = message => message;
+    const wrapped = wrapFunc(parent, child);
+    expect(wrapped('hello')).toEqual('hello world');
+  });
+});
 
 describe('Lifecycle', () => {
   let store;
@@ -44,9 +53,14 @@ describe('Lifecycle', () => {
     const wrappedObj = new ApiController(obj, store);
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
+    expect(typeof obj.props.setToolLoading).toEqual('function');
+    expect(typeof obj.props.setToolReady).toEqual('function');
     expect(obj.props).toEqual({
       foo: 'bar',
-      hello: 'world'
+      hello: 'world',
+      // TRICKY: these are regenerated every time so we validate them above
+      setToolLoading: obj.props.setToolLoading,
+      setToolReady: obj.props.setToolReady
     });
   });
 
@@ -54,7 +68,14 @@ describe('Lifecycle', () => {
     const wrappedObj = new ApiController(obj, store);
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
-    expect(obj.props).toEqual(props);
+    expect(typeof obj.props.setToolLoading).toEqual('function');
+    expect(typeof obj.props.setToolReady).toEqual('function');
+    expect(obj.props).toEqual({
+      foo: 'bar',
+      // TRICKY: these are generated every time so we validate them above
+      setToolLoading: obj.props.setToolLoading,
+      setToolReady: obj.props.setToolReady
+    });
     expect(obj.mapStateToProps).toBeCalled();
     expect(obj.mapDispatchToProps).toBeCalled();
     expect(obj.toolWillReceiveProps).toBeCalled();
@@ -64,10 +85,15 @@ describe('Lifecycle', () => {
     const wrappedObj = new ApiController(obj, store, 'some/dir');
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
+    expect(typeof obj.props.setToolLoading).toEqual('function');
+    expect(typeof obj.props.setToolReady).toEqual('function');
     expect(obj.props).toEqual({
       currentLanguage: 'en_US',
       translate: mockTranslate, // TRICKY: pulled from the mock
-      foo: 'bar'
+      foo: 'bar',
+      // TRICKY: these are generated every time so we validate them above
+      setToolLoading: obj.props.setToolLoading,
+      setToolReady: obj.props.setToolReady
     });
   });
 
@@ -78,7 +104,16 @@ describe('Lifecycle', () => {
       hello: 'world'
     };
     expect(wrappedObj.triggerWillConnect(props)).toEqual('connected');
-    expect(obj.props).toEqual(props);
+
+    expect(typeof obj.props.setToolLoading).toEqual('function');
+    expect(typeof obj.props.setToolReady).toEqual('function');
+    expect(obj.props).toEqual({
+      appLanguage: 'en_US',
+      hello: 'world',
+      // TRICKY: these are generated every time so we validate them above
+      setToolLoading: obj.props.setToolLoading,
+      setToolReady: obj.props.setToolReady
+    });
   });
 
   it('executes the disconnect lifecycle', () => {

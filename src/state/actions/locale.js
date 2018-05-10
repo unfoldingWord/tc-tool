@@ -1,5 +1,3 @@
-jest.unmock('react-localize-redux');
-
 import fs from 'fs-extra';
 import path from 'path';
 import {
@@ -187,11 +185,10 @@ const setActiveLanguageSafely = (dispatch, locale, languages, translations) => {
  */
 const setActiveLocale = (dispatch, locale, languages, translations) => {
   const systemLocale = osLocale.sync();
-  // .then(osLocale => {
   const locales = [locale, systemLocale, 'en_US'];
   let foundLocale = false;
   for (const langCode of locales) {
-    // TRICK: make sure the input locale was not null
+    // TRICKY: make sure the input locale was not null
     if (langCode &&
       setActiveLanguageSafely(dispatch, langCode, languages, translations)) {
       if (langCode !== locale) {
@@ -205,7 +202,6 @@ const setActiveLocale = (dispatch, locale, languages, translations) => {
   if (!foundLocale) {
     console.error('Tool was unable to find suitable locale.');
   }
-  // });
 };
 
 /**

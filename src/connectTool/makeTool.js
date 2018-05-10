@@ -10,6 +10,9 @@ export const makeTool = (
   WrappedComponent, store, localeDir = undefined, api = undefined) => {
   const hasLocale = Boolean(localeDir);
   const hasApi = Boolean(api);
+
+  // TRICKY: this will overwrite the default store context key
+  // thus removing direct access to tC core's store which also uses the default key.
   const Provider = createProvider();
 
   class Tool extends React.Component {
