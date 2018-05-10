@@ -62,6 +62,15 @@ export default class ApiController extends Lifecycle {
   }
 
   /**
+   * Subscribes to the API's store
+   * @param {object} observer - Any object that can be used as an observer. The observer object should have a next method
+   * @return {*}
+   */
+  subscribe(observer) {
+    return this._store.subscribe(observer);
+  }
+
+  /**
    * Structures the props and injects new ones
    * @param props - props received from tc that will be processed
    * @return {[]} - an array of processed arguments
