@@ -56,7 +56,7 @@ describe('Lifecycle', () => {
     expect(typeof obj.props.setToolLoading).toEqual('function');
     expect(typeof obj.props.setToolReady).toEqual('function');
     expect(obj.props).toEqual({
-      foo: 'bar',
+      tc: {foo: 'bar'},
       hello: 'world',
       // TRICKY: these are regenerated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
@@ -71,7 +71,7 @@ describe('Lifecycle', () => {
     expect(typeof obj.props.setToolLoading).toEqual('function');
     expect(typeof obj.props.setToolReady).toEqual('function');
     expect(obj.props).toEqual({
-      foo: 'bar',
+      tc: {foo: 'bar'},
       // TRICKY: these are generated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
       setToolReady: obj.props.setToolReady
@@ -90,7 +90,7 @@ describe('Lifecycle', () => {
     expect(obj.props).toEqual({
       currentLanguage: 'en_US',
       translate: mockTranslate, // TRICKY: pulled from the mock
-      foo: 'bar',
+      tc: {foo: 'bar'},
       // TRICKY: these are generated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
       setToolReady: obj.props.setToolReady
@@ -108,8 +108,10 @@ describe('Lifecycle', () => {
     expect(typeof obj.props.setToolLoading).toEqual('function');
     expect(typeof obj.props.setToolReady).toEqual('function');
     expect(obj.props).toEqual({
-      appLanguage: 'en_US',
-      hello: 'world',
+      tc: {
+        appLanguage: 'en_US',
+        hello: 'world'
+      },
       // TRICKY: these are generated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
       setToolReady: obj.props.setToolReady

@@ -61,8 +61,8 @@ export default class ApiController extends Lifecycle {
   }
 
   /**
-   * Inject locale props
-   * @param props
+   * Structures the props and injects new ones
+   * @param props - props received from tc that will be processed
    * @return {[]} - an array of processed arguments
    * @private
    */
@@ -71,7 +71,7 @@ export default class ApiController extends Lifecycle {
     const localeProps = this._hasLocale ? makeLocaleProps(state) : {};
 
     return {
-      ...props,
+      tc: props,
       ...localeProps,
       setToolReady: wrapFunc(this._store.dispatch, setToolReady),
       setToolLoading: wrapFunc(this._store.dispatch, setToolLoading)
@@ -80,7 +80,7 @@ export default class ApiController extends Lifecycle {
 
   /**
    * Initialize locale
-   * @param props
+   * @param props - props received from tc
    * @private
    */
   _preprocessConnect(props) {
@@ -113,7 +113,7 @@ export default class ApiController extends Lifecycle {
 
   /**
    * Requests extra props from the api
-   * @param {*} props - the new props that will be mapped against
+   * @param {*} props - the new props from tc that will be mapped against
    * @private
    * @return {*} - the mapped props
    */
@@ -146,11 +146,7 @@ export default class ApiController extends Lifecycle {
    * @param {*} props
    */
   triggerWillReceiveProps(props) {
-    const mappedProps = this._triggerMapToProps(props);
-    const newProps = {
-      ...props,
-      ...mappedProps
-    };
+    const newProps = this._triggerMapToProps(props);
     const result = this.trigger(names.WILL_RECEIVE_PROPS, newProps);
     this._api.props = newProps;
     return result;
@@ -192,11 +188,7 @@ export default class ApiController extends Lifecycle {
    */
   triggerWillConnect(props) {
     this._preprocessConnect(props);
-    const mappedProps = this._triggerMapToProps(props);
-    this._api.props = {
-      ...props,
-      ...mappedProps
-    };
+    this._api.props = this._triggerMapToProps(props);
 
     this.unsubscribe = this._store.subscribe(this.handleStoreChange);
     this.unsubscribeThrottled = this._store.subscribe(
