@@ -61,7 +61,7 @@ describe('Lifecycle', () => {
       // TRICKY: these are regenerated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
       setToolReady: obj.props.setToolReady,
-      isToolReady: true
+      toolIsReady: true
     });
   });
 
@@ -76,7 +76,7 @@ describe('Lifecycle', () => {
       // TRICKY: these are generated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
       setToolReady: obj.props.setToolReady,
-      isToolReady: true
+      toolIsReady: true
     });
     expect(obj.mapStateToProps).toBeCalled();
     expect(obj.mapDispatchToProps).toBeCalled();
@@ -96,7 +96,7 @@ describe('Lifecycle', () => {
       // TRICKY: these are generated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
       setToolReady: obj.props.setToolReady,
-      isToolReady: true
+      toolIsReady: true
     });
   });
 
@@ -118,7 +118,7 @@ describe('Lifecycle', () => {
       // TRICKY: these are generated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
       setToolReady: obj.props.setToolReady,
-      isToolReady: true
+      toolIsReady: true
     });
   });
 

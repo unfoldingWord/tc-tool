@@ -18,7 +18,7 @@ export const makeTool = (
   class Tool extends React.Component {
     constructor(props) {
       super(props);
-      this.isToolLoaded = this.isToolLoaded.bind(this);
+      this.localeIsLoaded = this.localeIsLoaded.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.state = {
         broken: false,
@@ -65,11 +65,16 @@ export const makeTool = (
      * @return {bool}
      * @private
      */
-    isToolLoaded() {
-      const state = store.getState();
-      const toolIsLoaded = !isToolLoading(state);
-      const localeIsLoaded = !hasLocale || getLocaleLoaded(state);
-      return toolIsLoaded || localeIsLoaded;
+    localeIsLoaded() {
+      return !hasLocale || getLocaleLoaded(store.getState());
+    }
+
+    /**
+     * Checks if the api has finished loading
+     * @return {boolean}
+     */
+    apiIsReady() {
+      return !isToolLoading(store.getState());
     }
 
     render() {
@@ -80,13 +85,11 @@ export const makeTool = (
                         error={error}
                         info={info}/>
         );
-      } else if (!this.isToolLoaded()) {
+      } else if (!this.localeIsLoaded()) {
         // TODO: we could display a loading screen while the tool loads
         return null;
       } else {
         const localeProps = hasLocale ? makeLocaleProps(store.getState()) : {};
-        // TODO: rather than building the api prop hierarchy in tC we should pass flat props
-        // then here and in the api we can scope them to `tc`,
         return (
           <Provider store={store}>
             <WrappedComponent
@@ -94,6 +97,7 @@ export const makeTool = (
               {...this.props} // TRICKY: this is for backwards compatibility until all tools are updated.
               {...localeProps}
               toolApi={api}
+              toolIsReady={this.apiIsReady()}
             />
           </Provider>
         );

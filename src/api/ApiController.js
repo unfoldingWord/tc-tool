@@ -85,7 +85,7 @@ export default class ApiController extends Lifecycle {
       ...localeProps,
       setToolReady: wrapFunc(this._store.dispatch, setToolReady),
       setToolLoading: wrapFunc(this._store.dispatch, setToolLoading),
-      isToolReady: !isToolLoading(state)
+      toolIsReady: !isToolLoading(state)
     };
   }
 
