@@ -60,7 +60,8 @@ describe('Lifecycle', () => {
       hello: 'world',
       // TRICKY: these are regenerated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
-      setToolReady: obj.props.setToolReady
+      setToolReady: obj.props.setToolReady,
+      isToolReady: true
     });
   });
 
@@ -74,7 +75,8 @@ describe('Lifecycle', () => {
       tc: {foo: 'bar'},
       // TRICKY: these are generated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
-      setToolReady: obj.props.setToolReady
+      setToolReady: obj.props.setToolReady,
+      isToolReady: true
     });
     expect(obj.mapStateToProps).toBeCalled();
     expect(obj.mapDispatchToProps).toBeCalled();
@@ -93,7 +95,8 @@ describe('Lifecycle', () => {
       tc: {foo: 'bar'},
       // TRICKY: these are generated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
-      setToolReady: obj.props.setToolReady
+      setToolReady: obj.props.setToolReady,
+      isToolReady: true
     });
   });
 
@@ -114,7 +117,8 @@ describe('Lifecycle', () => {
       },
       // TRICKY: these are generated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
-      setToolReady: obj.props.setToolReady
+      setToolReady: obj.props.setToolReady,
+      isToolReady: true
     });
   });
 

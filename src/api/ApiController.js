@@ -4,6 +4,7 @@ import * as names from './lifecycleNames';
 import {makeLocaleProps} from '../connectTool';
 import {loadLocalization} from '../state/actions/locale';
 import {setToolLoading, setToolReady} from '../state/actions/loading';
+import {isToolLoading} from '../state/reducers';
 
 /**
  * Wraps a function with another function.
@@ -74,7 +75,8 @@ export default class ApiController extends Lifecycle {
       tc: props,
       ...localeProps,
       setToolReady: wrapFunc(this._store.dispatch, setToolReady),
-      setToolLoading: wrapFunc(this._store.dispatch, setToolLoading)
+      setToolLoading: wrapFunc(this._store.dispatch, setToolLoading),
+      isToolReady: !isToolLoading(state)
     };
   }
 
