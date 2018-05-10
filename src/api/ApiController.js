@@ -1,23 +1,28 @@
 import Lifecycle from './Lifecycle';
 import throttle from 'lodash/throttle';
 import * as names from './lifecycleNames';
+import {makeLocaleProps} from '../connectTool';
+import {loadLocalization} from '../state/actions/locale';
 
 /**
- * Lifecycle methods for the tool api
+ * Binds lifecycle methods to a {@link ToolApi}
  */
-export default class ApiLifecycle extends Lifecycle {
+export default class ApiController extends Lifecycle {
 
   /**
    * Creates a new api lifecycle instance.
    * @param {ToolApi} api - An instance of the tool api
    * @param {*} store - the tool's redux store
-   * @param {func} [propPreProcessor] - optional callback to pre-process props
+   * @param {string} [localeDir] - the directory where locale will be loaded
    */
-  constructor(api, store, propPreProcessor = undefined) {
+  constructor(api, store, localeDir = undefined) {
     super(api);
     this._store = store;
     this._api = api;
-    this._propPreProcessor = propPreProcessor;
+    this._localeDir = localeDir;
+    this._hasLocale = Boolean(localeDir);
+    // this._preprocessor = propPreProcessor;
+    // this._preprocessors = {};
     this._api.context = {
       store
     };
@@ -38,6 +43,19 @@ export default class ApiLifecycle extends Lifecycle {
   }
 
   /**
+   * Subscribes a handler to pre-process a lifecycle method.
+   * Pre-processing is performed in order of subscription.
+   * @param {string} method - the name of the lifecycle method being subscribed to
+   * @param callback
+   */
+  // subscribePreProcessor(method, callback) {
+  //   if(!(method in this._preprocessors)) {
+  //     this._preprocessors[method] = [];
+  //   }
+  //   this._preprocessors[method].push(callback);
+  // }
+
+  /**
    * Returns the name of the tool
    * @return {string}
    */
@@ -46,20 +64,38 @@ export default class ApiLifecycle extends Lifecycle {
   }
 
   /**
-   * Pre-process lifecycle method arguments
+   * Inject locale props
    * @param props
    * @return {[]} - an array of processed arguments
    * @private
    */
   _preprocessProps(props) {
-    if (this._propPreProcessor) {
-      const result = this._propPreProcessor(this._store.getState(),
-        this._store.dispatch, props);
-      if (result) {
-        return result;
-      }
+    const state = this._store.getState();
+    const localeProps = this._hasLocale ? makeLocaleProps(state) : {};
+    // if (this._preprocessor) {
+    //   const result = this._preprocessor(this._store.getState(),
+    //     this._store.dispatch, props);
+    //   if (result) {
+    //     return result;
+    //   }
+    // }
+
+    return {
+      ...props,
+      ...localeProps
+    };
+  }
+
+  /**
+   * Initialize locale
+   * @param props
+   * @private
+   */
+  _preprocessConnect(props) {
+    const {appLanguage} = props;
+    if (this._hasLocale) {
+      this._store.dispatch(loadLocalization(this._localeDir, appLanguage));
     }
-    return props;
   }
 
   /**
@@ -91,6 +127,8 @@ export default class ApiLifecycle extends Lifecycle {
    */
   _triggerMapToProps(props) {
     const processedProps = this._preprocessProps(props);
+    // const state = this._store.getState();
+    // const localeProps = makeLocaleProps(state, )
 
     let dispatchProps = this.trigger(names.MAP_DISPATCH_TO_PROPS,
       this._store.dispatch, processedProps);
@@ -163,6 +201,7 @@ export default class ApiLifecycle extends Lifecycle {
    * @param {*} props - props that will be attached to the tool before it connects
    */
   triggerWillConnect(props) {
+    this._preprocessConnect(props);
     const mappedProps = this._triggerMapToProps(props);
     this._api.props = {
       ...props,

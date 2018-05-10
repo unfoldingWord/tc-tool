@@ -1,16 +1,21 @@
-import ApiLifecycle from '../ApiLifecycle';
+import ApiController from '../ApiController';
 import configureMockStore from 'redux-mock-store';
+import {translate as mockTranslate} from '../../../__mocks__/react-localize-redux';
 
 const middlewares = [];
 const mockStore = configureMockStore(middlewares);
-import * as names from '../lifecycleNames';
 
 describe('Lifecycle', () => {
   let store;
   let obj;
 
   beforeEach(() => {
-    store = mockStore({});
+    jest.clearAllMocks();
+    store = mockStore({
+      internal: {
+        locale: {}
+      }
+    });
     obj = {
       hello: () => 'world',
       toolWillConnect: () => 'connected',
@@ -26,7 +31,7 @@ describe('Lifecycle', () => {
   });
 
   it('executes an existing method', () => {
-    const wrappedObj = new ApiLifecycle(obj, store);
+    const wrappedObj = new ApiController(obj, store);
     expect(wrappedObj.trigger('hello')).toEqual('world');
   });
 
@@ -36,7 +41,7 @@ describe('Lifecycle', () => {
         hello: 'world'
       };
     };
-    const wrappedObj = new ApiLifecycle(obj, store);
+    const wrappedObj = new ApiController(obj, store);
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
     expect(obj.props).toEqual({
@@ -46,7 +51,7 @@ describe('Lifecycle', () => {
   });
 
   it('executes receive props lifecycle', () => {
-    const wrappedObj = new ApiLifecycle(obj, store);
+    const wrappedObj = new ApiController(obj, store);
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
     expect(obj.props).toEqual(props);
@@ -56,35 +61,37 @@ describe('Lifecycle', () => {
   });
 
   it('pre-processes props to receive props lifecycle', () => {
-    const wrappedObj = new ApiLifecycle(obj, store, (props) => {
-      return {
-        ...props,
-        hello: 'world'
-      };
-    });
+    const wrappedObj = new ApiController(obj, store, 'some/dir');
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
     expect(obj.props).toEqual({
-      foo: 'bar',
-      hello: 'world'
+      currentLanguage: 'en_US',
+      translate: mockTranslate, // TRICKY: pulled from the mock
+      foo: 'bar'
     });
   });
 
   it('executes the connect lifecycle', () => {
-    const wrappedObj = new ApiLifecycle(obj, store);
-    const props = {hello: 'world'};
+    const wrappedObj = new ApiController(obj, store);
+    const props = {
+      appLanguage: 'en_US',
+      hello: 'world'
+    };
     expect(wrappedObj.triggerWillConnect(props)).toEqual('connected');
     expect(obj.props).toEqual(props);
   });
 
   it('executes the disconnect lifecycle', () => {
-    const wrappedObj = new ApiLifecycle(obj, store);
+    const wrappedObj = new ApiController(obj, store);
     expect(wrappedObj.triggerWillDisconnect()).toEqual('disconnected');
   });
 
   it('subscribes to the store when connecting', () => {
-    const wrappedObj = new ApiLifecycle(obj, store);
-    wrappedObj.triggerWillConnect();
+    const wrappedObj = new ApiController(obj, store);
+    const props = {
+      appLanguage: 'en_US'
+    };
+    wrappedObj.triggerWillConnect(props);
     expect(obj.stateChanged).not.toBeCalled();
     store.dispatch({type: 'ANY_ACTION'});
     expect(obj.stateChanged.mock.calls.length).toBe(1);
@@ -96,8 +103,11 @@ describe('Lifecycle', () => {
   });
 
   it('triggers throttled state changed', () => {
-    const wrappedObj = new ApiLifecycle(obj, store);
-    wrappedObj.triggerWillConnect();
+    const wrappedObj = new ApiController(obj, store);
+    const props = {
+      appLanguage: 'en_US'
+    };
+    wrappedObj.triggerWillConnect(props);
     expect(obj.stateChangeThrottled).not.toBeCalled();
     store.dispatch({type: 'ANY_ACTION'});
     store.dispatch({type: 'ANY_ACTION'});

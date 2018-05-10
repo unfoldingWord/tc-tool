@@ -10,6 +10,6 @@ export default class ToolApi {
   }
 
   toString() {
-    throw new Error('ToolApi.toString was not overridden. This is likely an issue with connectTool().');
+    throw new Error('ToolApi.toString was not overridden. This is likely an issue with tc-tool.');
   }
 }

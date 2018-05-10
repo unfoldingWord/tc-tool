@@ -1,11 +1,12 @@
-/**
- * These actions are used for controlling localization within the application.
- * @module LocaleActions
- */
+jest.unmock('react-localize-redux');
 
 import fs from 'fs-extra';
 import path from 'path';
-import {initialize, addTranslationForLanguage, setActiveLanguage} from 'react-localize-redux';
+import {
+  addTranslationForLanguage,
+  initialize,
+  setActiveLanguage
+} from 'react-localize-redux';
 import osLocale from 'os-locale';
 import _ from 'lodash';
 import * as types from './types';
@@ -19,7 +20,8 @@ const DEFAULT_LOCALE = 'en_US';
  * @param languageCode
  */
 const onMissingTranslation = (key, languageCode) => {
-  console.error(`Tool missing locale key "${key}" for language ${languageCode}`, new Error().stack);
+  console.error(`Tool missing locale key "${key}" for language ${languageCode}`,
+    new Error().stack);
 };
 
 /**
@@ -43,7 +45,8 @@ const explodeLocaleName = (fileName) => {
  * @param {list} nonTranslatableStrings a list of non-translatable strings to inject
  * @return {object} the enhanced translation
  */
-const enhanceTranslation = (translation, fileName, nonTranslatableStrings=[]) => {
+const enhanceTranslation = (
+  translation, fileName, nonTranslatableStrings = []) => {
   const {langName, langCode, shortLangCode} = explodeLocaleName(fileName);
   return {
     ...translation,
@@ -75,79 +78,73 @@ export const setLocaleLoaded = () => ({
  * @param {string} appLanguage the language code that will be enabled by default
  * @return {function(*)}
  */
-export const loadLocalization = (localeDir, appLanguage=null) => {
+export const loadLocalization = (localeDir, appLanguage = null) => {
   return (dispatch) => {
-    if(!fs.existsSync(localeDir)) {
-      return Promise.reject(`Tool missing locale dir at ${localeDir}`);
+    if (!fs.existsSync(localeDir)) {
+      throw new Error(`Tool missing locale dir at ${localeDir}`);
     }
-    return fs.readdir(localeDir).then((items) => {
-      // load locale
-      let languages = [];
-      let translations = {};
-      if(!items) {
-        return Promise.reject(`Tool found no localization files in ${localeDir}`);
-      }
-      for(let file of items) {
-        if(!file.endsWith('.json')) {
-          // don't warn if readme or NonTranslatable.js
-          if(!file.endsWith('.md') && !file.endsWith('.js')) {
-            console.warn(`Tool skipping invalid localization file ${file}`);
-          }
-          continue;
+    const items = fs.readdirSync(localeDir);
+    // load locale
+    let languages = [];
+    let translations = {};
+    if (!items) {
+      throw new Error(`Tool found no localization files in ${localeDir}`);
+    }
+    for (let file of items) {
+      if (!file.endsWith('.json')) {
+        // don't warn if readme or NonTranslatable.js
+        if (!file.endsWith('.md') && !file.endsWith('.js')) {
+          console.warn(`Tool skipping invalid localization file ${file}`);
         }
-        const localeFile = path.join(localeDir, file);
-        try {
-          let translation = JSON.parse(fs.readFileSync(localeFile));
-
-          const nonTranslatablePath = path.join(localeDir, 'nonTranslatable.js');
-          let nonTranslatable = {};
-          if(fs.existsSync(nonTranslatablePath)) {
-            nonTranslatable = require(nonTranslatablePath);
-          }
-
-          translation = enhanceTranslation(translation, file, nonTranslatable);
-
-          const {langCode, shortLangCode} = explodeLocaleName(file);
-          languages.push(langCode);
-          translations[langCode] = translation;
-
-          // include short language names for wider locale compatibility
-          if(_.indexOf(languages, shortLangCode) === -1) {
-            languages.push(shortLangCode);
-            translations[shortLangCode] = translation;
-          }
-        } catch(e) {
-          console.warn(`Tool failed to load localization ${localeFile}: ${e}`);
-        }
+        continue;
       }
-      return Promise.resolve({languages, translations});
-    }).then(({languages, translations}) => {
-      // init locale
-      const namedLanguages = languages.map((code) => {
-        return {
-          code,
-          name: translations[code]['_']['language_name']
-        };
-      });
-      dispatch(initialize(namedLanguages, {
-        defaultLanguage: DEFAULT_LOCALE,
-        missingTranslationCallback: onMissingTranslation
-      }));
-      for(const languageCode in translations) {
-        if(translations.hasOwnProperty(languageCode)) {
-          dispatch(addTranslationForLanguage(translations[languageCode], languageCode));
-        }
-      }
-      return {languages, translations};
-    }).then(({languages, translations}) => {
-      if(appLanguage === DEFAULT_LOCALE) return;
+      const localeFile = path.join(localeDir, file);
+      try {
+        let translation = JSON.parse(fs.readFileSync(localeFile));
 
-      return setActiveLocale(dispatch, appLanguage, languages, translations);
-    }).then(() => {
-      dispatch(setLocaleLoaded());
-    }).catch(err => {
-      console.error('Tool failed to initialize localization', err);
+        const nonTranslatablePath = path.join(localeDir, 'nonTranslatable.js');
+        let nonTranslatable = {};
+        if (fs.existsSync(nonTranslatablePath)) {
+          nonTranslatable = require(nonTranslatablePath);
+        }
+
+        translation = enhanceTranslation(translation, file, nonTranslatable);
+
+        const {langCode, shortLangCode} = explodeLocaleName(file);
+        languages.push(langCode);
+        translations[langCode] = translation;
+
+        // include short language names for wider locale compatibility
+        if (_.indexOf(languages, shortLangCode) === -1) {
+          languages.push(shortLangCode);
+          translations[shortLangCode] = translation;
+        }
+      } catch (e) {
+        console.warn(`Tool failed to load localization ${localeFile}: ${e}`);
+      }
+    }
+
+    // init locale
+    const namedLanguages = languages.map((code) => {
+      return {
+        code,
+        name: translations[code]['_']['language_name']
+      };
     });
+    dispatch(initialize(namedLanguages, {
+      defaultLanguage: DEFAULT_LOCALE,
+      missingTranslationCallback: onMissingTranslation
+    }));
+    for (const languageCode in translations) {
+      if (translations.hasOwnProperty(languageCode)) {
+        dispatch(
+          addTranslationForLanguage(translations[languageCode], languageCode));
+      }
+    }
+    if (appLanguage !== DEFAULT_LOCALE) {
+      setActiveLocale(dispatch, appLanguage, languages, translations);
+    }
+    dispatch(setLocaleLoaded());
   };
 };
 
@@ -189,25 +186,27 @@ const setActiveLanguageSafely = (dispatch, locale, languages, translations) => {
  * @return {function(*=, *)}
  */
 const setActiveLocale = (dispatch, locale, languages, translations) => {
-  return osLocale().then(osLocale => {
-    const locales = [locale, osLocale, 'en_US'];
-    let foundLocale = false;
-    for(const langCode of locales) {
-      // TRICK: make sure the input locale was not null
-      if(langCode && setActiveLanguageSafely(dispatch, langCode, languages, translations)) {
-        if(langCode !== locale) {
-          console.warn(`Tool could not find locale ${locale}. Falling back to ${langCode}`);
-        }
-        foundLocale = true;
-        break;
+  const systemLocale = osLocale.sync();
+  // .then(osLocale => {
+  const locales = [locale, systemLocale, 'en_US'];
+  let foundLocale = false;
+  for (const langCode of locales) {
+    // TRICK: make sure the input locale was not null
+    if (langCode &&
+      setActiveLanguageSafely(dispatch, langCode, languages, translations)) {
+      if (langCode !== locale) {
+        console.warn(
+          `Tool could not find locale ${locale}. Falling back to ${langCode}`);
       }
+      foundLocale = true;
+      break;
     }
-    if(!foundLocale) {
-      console.error('Tool was unable to find suitable locale.');
-    }
-  });
+  }
+  if (!foundLocale) {
+    console.error('Tool was unable to find suitable locale.');
+  }
+  // });
 };
-
 
 /**
  * Sets the active locale.

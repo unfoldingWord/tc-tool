@@ -1,3 +1,5 @@
+jest.unmock('react-localize-redux');
+jest.mock('../state/actions/locale');
 import React from 'react';
 import connectTool, {wrapFunc} from '../connectTool';
 import {configure, mount} from 'enzyme';
@@ -5,7 +7,6 @@ import Adapter from 'enzyme-adapter-react-16';
 import path from 'path';
 import renderer from 'react-test-renderer';
 
-jest.mock('../state/actions/locale');
 
 class TestComponent extends React.Component {
   render() {
