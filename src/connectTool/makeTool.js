@@ -90,7 +90,7 @@ export const makeTool = (
         return (
           <Provider store={store}>
             <WrappedComponent
-              {...this.props}
+              tc={this.props}
               toolApi={api}
               {...localeProps}
             />

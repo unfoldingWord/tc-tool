@@ -1,7 +1,7 @@
 jest.unmock('react-localize-redux');
-jest.mock('../state/actions/locale');
+jest.mock('../../state/actions/locale');
 import React from 'react';
-import connectTool from '../connectTool';
+import connectTool from '../../connectTool';
 import {configure, mount} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import path from 'path';
@@ -50,7 +50,7 @@ describe('props', () => {
                                     appLanguage="en_US"/>
     );
     const component = wrapper.find('TestComponent');
-    expect(component.props().appLanguage).toEqual('en_US');
+    expect(component.props().tc.appLanguage).toEqual('en_US');
     expect(component.props().currentLanguage).not.toBeDefined();
     expect(component.props().translate).not.toBeDefined();
   });
@@ -64,7 +64,7 @@ describe('props', () => {
                                     appLanguage="de_DE"/>
     );
     const component = wrapper.find('TestComponent');
-    expect(component.props().appLanguage).toEqual('de_DE');
+    expect(component.props().tc.appLanguage).toEqual('de_DE');
     expect(component.props().currentLanguage).toEqual('de_DE');
     expect(component.props().translate).toBeDefined();
   });
