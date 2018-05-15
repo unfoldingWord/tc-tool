@@ -106,9 +106,6 @@ export const makeTool = (
   }
 
   Tool.propTypes = {
-    currentToolViews: PropTypes.object.isRequired,
-    resourcesReducer: PropTypes.object.isRequired,
-    contextIdReducer: PropTypes.object.isRequired,
     appLanguage: PropTypes.string.isRequired
   };
 
