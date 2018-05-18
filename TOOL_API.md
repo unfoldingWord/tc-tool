@@ -1,5 +1,8 @@
 # Tool Api
 
+> NOTE: Tools will often use two different APIs: The Tool API, and the tC API.
+> For information regarding the tC API see the tC documentation.
+
 `connectTool` gives you the ability to expose an API to translationCore (tC) and supporting tools.
 Doing so is super easy. Let's assume you have a class named `MyApi`.
 
