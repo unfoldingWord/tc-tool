@@ -48,6 +48,7 @@ export const makeTool = (
   class Tool extends React.Component {
     constructor(props) {
       super(props);
+      this.handleChange = this.handleChange.bind(this);
       this.makeToolProps = this.makeToolProps.bind(this);
       this.onWriteToolData = this.onWriteToolData.bind(this);
       this.onReadToolData = this.onReadToolData.bind(this);
