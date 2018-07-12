@@ -45,7 +45,7 @@ describe('Lifecycle', () => {
   });
 
   it('executes receive props lifecycle with mapped state to props', () => {
-    obj.mapStateToProps = state => {
+    obj.mapStateToProps = () => {
       return {
         hello: 'world'
       };
@@ -55,6 +55,16 @@ describe('Lifecycle', () => {
     wrappedObj.triggerWillReceiveProps(props);
     expect(typeof obj.props.setToolLoading).toEqual('function');
     expect(typeof obj.props.setToolReady).toEqual('function');
+    expect(Object.keys(obj.props.tool)).toEqual([
+      'toolDataPathExists',
+      'toolDataPathExistsSync',
+      'deleteToolFile',
+      'readToolData',
+      'readToolDataSync',
+      'writeToolData',
+      'isReady'
+    ]);
+    delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
     expect(obj.props).toEqual({
       tc: {foo: 'bar'},
       hello: 'world',
@@ -71,6 +81,16 @@ describe('Lifecycle', () => {
     wrappedObj.triggerWillReceiveProps(props);
     expect(typeof obj.props.setToolLoading).toEqual('function');
     expect(typeof obj.props.setToolReady).toEqual('function');
+    expect(Object.keys(obj.props.tool)).toEqual([
+      'toolDataPathExists',
+      'toolDataPathExistsSync',
+      'deleteToolFile',
+      'readToolData',
+      'readToolDataSync',
+      'writeToolData',
+      'isReady'
+    ]);
+    delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
     expect(obj.props).toEqual({
       tc: {foo: 'bar'},
       // TRICKY: these are generated every time so we validate them above
@@ -89,6 +109,18 @@ describe('Lifecycle', () => {
     wrappedObj.triggerWillReceiveProps(props);
     expect(typeof obj.props.setToolLoading).toEqual('function');
     expect(typeof obj.props.setToolReady).toEqual('function');
+    expect(Object.keys(obj.props.tool)).toEqual([
+      'translate',
+      'currentLanguage',
+      'toolDataPathExists',
+      'toolDataPathExistsSync',
+      'deleteToolFile',
+      'readToolData',
+      'readToolDataSync',
+      'writeToolData',
+      'isReady'
+    ]);
+    delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
     expect(obj.props).toEqual({
       currentLanguage: 'en_US',
       translate: mockTranslate, // TRICKY: pulled from the mock
@@ -110,6 +142,16 @@ describe('Lifecycle', () => {
 
     expect(typeof obj.props.setToolLoading).toEqual('function');
     expect(typeof obj.props.setToolReady).toEqual('function');
+    expect(Object.keys(obj.props.tool)).toEqual([
+      'toolDataPathExists',
+      'toolDataPathExistsSync',
+      'deleteToolFile',
+      'readToolData',
+      'readToolDataSync',
+      'writeToolData',
+      'isReady'
+    ]);
+    delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
     expect(obj.props).toEqual({
       tc: {
         appLanguage: 'en_US',

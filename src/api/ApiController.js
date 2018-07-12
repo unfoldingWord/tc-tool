@@ -1,10 +1,9 @@
 import Lifecycle from './Lifecycle';
 import throttle from 'lodash/throttle';
 import * as names from './lifecycleNames';
-import {makeLocaleProps} from '../connectTool';
 import {loadLocalization} from '../state/actions/locale';
 import {setToolLoading, setToolReady} from '../state/actions/loading';
-import {isToolLoading} from '../state/reducers';
+import {makeToolProps} from '../connectTool/makeProps';
 
 /**
  * Wraps a function with another function.
@@ -78,14 +77,11 @@ export default class ApiController extends Lifecycle {
    */
   _preprocessProps(props) {
     const state = this._store.getState();
-    const localeProps = this._hasLocale ? makeLocaleProps(state) : {};
-
+    const toolProps = makeToolProps(props, this._api.toString(), state, this._hasLocale);
     return {
-      tc: props,
-      ...localeProps,
+      ...toolProps,
       setToolReady: wrapFunc(this._store.dispatch, setToolReady),
-      setToolLoading: wrapFunc(this._store.dispatch, setToolLoading),
-      toolIsReady: !isToolLoading(state)
+      setToolLoading: wrapFunc(this._store.dispatch, setToolLoading)
     };
   }
 
