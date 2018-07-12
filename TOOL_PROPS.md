@@ -92,3 +92,15 @@ ToolApi
 ```
 An instance of the tool's public api.
 This prop will only be available if an api has been configured for the tool.
+
+### setToolReady (only available in the ToolApi)
+```js
+setToolReady()
+```
+Indicates that the tool has finished loading
+
+### setToolLoading (only available in the ToolApi)
+```js
+setToolLoading()
+```
+Indicates that the tool is still loading.
