@@ -80,6 +80,8 @@ export default class ApiController extends Lifecycle {
     const toolProps = makeToolProps(props, this._api.toString(), state, this._hasLocale);
     return {
       ...toolProps,
+      setToolReady: wrapFunc(this._store.dispatch, setToolReady), // TODO: deprecated
+      setToolLoading: wrapFunc(this._store.dispatch, setToolLoading), // TODO: deprecated
       tool: {
         ...toolProps.tool,
         setToolReady: wrapFunc(this._store.dispatch, setToolReady),

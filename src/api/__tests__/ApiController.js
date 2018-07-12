@@ -53,6 +53,13 @@ describe('Lifecycle', () => {
     const wrappedObj = new ApiController(obj, store);
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
+    {
+      // TRICKY: temporary backwards compatibility
+      expect(typeof obj.props.setToolLoading).toEqual('function');
+      expect(typeof obj.props.setToolReady).toEqual('function');
+      delete obj.props.setToolLoading;
+      delete obj.props.setToolReady;
+    }
     expect(Object.keys(obj.props.tool)).toEqual([
       'toolDataPathExists',
       'toolDataPathExistsSync',
@@ -77,6 +84,13 @@ describe('Lifecycle', () => {
     const wrappedObj = new ApiController(obj, store);
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
+    {
+      // TRICKY: temporary backwards compatibility
+      expect(typeof obj.props.setToolLoading).toEqual('function');
+      expect(typeof obj.props.setToolReady).toEqual('function');
+      delete obj.props.setToolLoading;
+      delete obj.props.setToolReady;
+    }
     expect(Object.keys(obj.props.tool)).toEqual([
       'toolDataPathExists',
       'toolDataPathExistsSync',
@@ -134,6 +148,13 @@ describe('Lifecycle', () => {
       hello: 'world'
     };
     expect(wrappedObj.triggerWillConnect(props)).toEqual('connected');
+    {
+      // TRICKY: temporary backwards compatibility
+      expect(typeof obj.props.setToolLoading).toEqual('function');
+      expect(typeof obj.props.setToolReady).toEqual('function');
+      delete obj.props.setToolLoading;
+      delete obj.props.setToolReady;
+    }
     expect(Object.keys(obj.props.tool)).toEqual([
       'toolDataPathExists',
       'toolDataPathExistsSync',
