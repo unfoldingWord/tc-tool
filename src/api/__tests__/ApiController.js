@@ -53,8 +53,6 @@ describe('Lifecycle', () => {
     const wrappedObj = new ApiController(obj, store);
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
-    expect(typeof obj.props.setToolLoading).toEqual('function');
-    expect(typeof obj.props.setToolReady).toEqual('function');
     expect(Object.keys(obj.props.tool)).toEqual([
       'toolDataPathExists',
       'toolDataPathExistsSync',
@@ -62,15 +60,15 @@ describe('Lifecycle', () => {
       'readToolData',
       'readToolDataSync',
       'writeToolData',
-      'isReady'
+      'isReady',
+      'setToolReady',
+      'setToolLoading'
     ]);
     delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
     expect(obj.props).toEqual({
       tc: {foo: 'bar'},
       hello: 'world',
-      // TRICKY: these are regenerated every time so we validate them above
-      setToolLoading: obj.props.setToolLoading,
-      setToolReady: obj.props.setToolReady,
+
       toolIsReady: true
     });
   });
@@ -79,8 +77,6 @@ describe('Lifecycle', () => {
     const wrappedObj = new ApiController(obj, store);
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
-    expect(typeof obj.props.setToolLoading).toEqual('function');
-    expect(typeof obj.props.setToolReady).toEqual('function');
     expect(Object.keys(obj.props.tool)).toEqual([
       'toolDataPathExists',
       'toolDataPathExistsSync',
@@ -88,14 +84,13 @@ describe('Lifecycle', () => {
       'readToolData',
       'readToolDataSync',
       'writeToolData',
-      'isReady'
+      'isReady',
+      'setToolReady',
+      'setToolLoading'
     ]);
     delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
     expect(obj.props).toEqual({
       tc: {foo: 'bar'},
-      // TRICKY: these are generated every time so we validate them above
-      setToolLoading: obj.props.setToolLoading,
-      setToolReady: obj.props.setToolReady,
       toolIsReady: true
     });
     expect(obj.mapStateToProps).toBeCalled();
@@ -107,8 +102,6 @@ describe('Lifecycle', () => {
     const wrappedObj = new ApiController(obj, store, 'some/dir');
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
-    expect(typeof obj.props.setToolLoading).toEqual('function');
-    expect(typeof obj.props.setToolReady).toEqual('function');
     expect(Object.keys(obj.props.tool)).toEqual([
       'translate',
       'currentLanguage',
@@ -118,7 +111,9 @@ describe('Lifecycle', () => {
       'readToolData',
       'readToolDataSync',
       'writeToolData',
-      'isReady'
+      'isReady',
+      'setToolReady',
+      'setToolLoading'
     ]);
     delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
     expect(obj.props).toEqual({
@@ -139,9 +134,6 @@ describe('Lifecycle', () => {
       hello: 'world'
     };
     expect(wrappedObj.triggerWillConnect(props)).toEqual('connected');
-
-    expect(typeof obj.props.setToolLoading).toEqual('function');
-    expect(typeof obj.props.setToolReady).toEqual('function');
     expect(Object.keys(obj.props.tool)).toEqual([
       'toolDataPathExists',
       'toolDataPathExistsSync',
@@ -149,7 +141,9 @@ describe('Lifecycle', () => {
       'readToolData',
       'readToolDataSync',
       'writeToolData',
-      'isReady'
+      'isReady',
+      'setToolReady',
+      'setToolLoading'
     ]);
     delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
     expect(obj.props).toEqual({
@@ -157,9 +151,6 @@ describe('Lifecycle', () => {
         appLanguage: 'en_US',
         hello: 'world'
       },
-      // TRICKY: these are generated every time so we validate them above
-      setToolLoading: obj.props.setToolLoading,
-      setToolReady: obj.props.setToolReady,
       toolIsReady: true
     });
   });
