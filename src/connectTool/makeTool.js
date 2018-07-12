@@ -114,10 +114,10 @@ export const makeTool = (
     appLanguage: PropTypes.string.isRequired,
     writeProjectData: PropTypes.func.isRequired,
     readProjectData: PropTypes.func.isRequired,
-    deleteProjectFile: PropTypes.func.isRequired,
     readProjectDataSync: PropTypes.func.isRequired,
-    projectDataPathExistsSync: PropTypes.func.isRequired,
-    projectDataPathExists: PropTypes.func.isRequired
+    deleteProjectFile: PropTypes.func.isRequired,
+    projectDataPathExists: PropTypes.func.isRequired,
+    projectDataPathExistsSync: PropTypes.func.isRequired
   };
 
   return Tool;
