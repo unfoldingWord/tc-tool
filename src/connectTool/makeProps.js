@@ -69,7 +69,7 @@ class ToolProps {
    * @return {*}
    */
   _namespaceFilePath(filePath) {
-    return path.join(this.namespace, filePath);
+    return path.join('tools', this.namespace, filePath);
   }
 
   _onWriteToolData(filePath, data) {
