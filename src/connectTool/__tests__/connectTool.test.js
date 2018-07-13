@@ -47,6 +47,12 @@ describe('props', () => {
       <ConnectedComponent.container currentToolViews={{}}
                                     resourcesReducer={{}}
                                     contextIdReducer={{}}
+                                    writeProjectData={jest.fn()}
+                                    readProjectData={jest.fn()}
+                                    readProjectDataSync={jest.fn()}
+                                    deleteProjectFile={jest.fn()}
+                                    projectDataPathExists={jest.fn()}
+                                    projectDataPathExistsSync={jest.fn()}
                                     appLanguage="en_US"/>
     );
     const component = wrapper.find('TestComponent');
@@ -61,6 +67,12 @@ describe('props', () => {
       <ConnectedComponent.container currentToolViews={{}}
                                     resourcesReducer={{}}
                                     contextIdReducer={{}}
+                                    writeProjectData={jest.fn()}
+                                    readProjectData={jest.fn()}
+                                    readProjectDataSync={jest.fn()}
+                                    deleteProjectFile={jest.fn()}
+                                    projectDataPathExists={jest.fn()}
+                                    projectDataPathExistsSync={jest.fn()}
                                     appLanguage="de_DE"/>
     );
     const component = wrapper.find('TestComponent');
@@ -74,6 +86,12 @@ describe('props', () => {
     const wrapper = mount(
       <ConnectedComponent.container currentToolViews={{}}
                                     resourcesReducer={{}}
+                                    writeProjectData={jest.fn()}
+                                    readProjectData={jest.fn()}
+                                    readProjectDataSync={jest.fn()}
+                                    deleteProjectFile={jest.fn()}
+                                    projectDataPathExists={jest.fn()}
+                                    projectDataPathExistsSync={jest.fn()}
                                     contextIdReducer={{}}/>
     );
     const component = wrapper.find('TestComponent');
@@ -92,6 +110,12 @@ describe('snapshots', () => {
       <ConnectedComponent.container currentToolViews={{}}
                                     resourcesReducer={{}}
                                     contextIdReducer={{}}
+                                    writeProjectData={jest.fn()}
+                                    readProjectData={jest.fn()}
+                                    readProjectDataSync={jest.fn()}
+                                    deleteProjectFile={jest.fn()}
+                                    projectDataPathExists={jest.fn()}
+                                    projectDataPathExistsSync={jest.fn()}
                                     appLanguage="de_DE"/>
     );
     expect(wrapper).toMatchSnapshot();
@@ -104,6 +128,12 @@ describe('snapshots', () => {
       <ConnectedComponent.container currentToolViews={{}}
                                     resourcesReducer={{}}
                                     contextIdReducer={{}}
+                                    writeProjectData={jest.fn()}
+                                    readProjectData={jest.fn()}
+                                    readProjectDataSync={jest.fn()}
+                                    deleteProjectFile={jest.fn()}
+                                    projectDataPathExists={jest.fn()}
+                                    projectDataPathExistsSync={jest.fn()}
                                     appLanguage="de_DE"/>
     );
     expect(wrapper).toMatchSnapshot();
