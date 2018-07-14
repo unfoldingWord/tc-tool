@@ -50,10 +50,24 @@ export const makeTool = (
         store.dispatch(loadLocalization(localeDir, appLanguage));
       }
       this.unsubscribe = store.subscribe(this.handleChange);
+      if (hasApi) {
+        this.unsubscribeApi = api.subscribe(this.toolDidUpdate);
+      }
     }
 
     componentWillUnmount() {
       this.unsubscribe();
+      if (this.unsubscribeApi) {
+        this.unsubscribeApi();
+      }
+    }
+
+    /**
+     * This is executed by the Tool Api in order to trigger re-rendering.
+     * You could also override this to provide your own logic.
+     */
+    toolDidUpdate() {
+      this.forceUpdate();
     }
 
     handleChange() {
@@ -69,6 +83,7 @@ export const makeTool = (
     }
 
     componentWillReceiveProps(nextProps) {
+      // TODO: this is an anti-pattern. see https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
       // stay in sync with the application language
       if (hasLocale && nextProps.appLanguage !== this.props.appLanguage) {
         store.dispatch(setActiveLocale(nextProps.appLanguage));
