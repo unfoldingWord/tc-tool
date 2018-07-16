@@ -7,7 +7,7 @@ export default class ToolApi {
   constructor() {
     this.props = {};
     this.context = {};
-    this._listeners = [];
+    this._toolListeners = [];
   }
 
   toString() {
@@ -26,7 +26,7 @@ export default class ToolApi {
     }
 
     let isSubscribed = true;
-    this._listeners.push(listener);
+    this._toolListeners.push(listener);
 
     // unsubscribe
     return () => {
@@ -35,8 +35,8 @@ export default class ToolApi {
       }
 
       isSubscribed = false;
-      const index = this._listeners.indexOf(listener);
-      this._listeners.splice(index, 1);
+      const index = this._toolListeners.indexOf(listener);
+      this._toolListeners.splice(index, 1);
     };
   }
 
@@ -44,8 +44,8 @@ export default class ToolApi {
    * Notifies listeners that the tool has been updated.
    */
   toolDidUpdate() {
-    for (let i = 0; i < this._listeners.length; i++) {
-      const listener = this._listeners[i];
+    for (let i = 0; i < this._toolListeners.length; i++) {
+      const listener = this._toolListeners[i];
       listener();
     }
   }

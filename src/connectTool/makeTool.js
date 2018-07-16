@@ -34,6 +34,7 @@ export const makeTool = (
     constructor(props) {
       super(props);
       this.handleChange = this.handleChange.bind(this);
+      this.toolDidUpdate = this.toolDidUpdate.bind(this);
 
       this.state = {
         broken: false,
