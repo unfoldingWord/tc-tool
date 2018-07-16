@@ -36,8 +36,6 @@ export const makeTool = (
       this.handleChange = this.handleChange.bind(this);
       this.toolDidUpdate = this.toolDidUpdate.bind(this);
 
-      this.componentRef = React.createRef();
-
       this.state = {
         broken: false,
         error: null,
@@ -70,12 +68,7 @@ export const makeTool = (
      * You could also override this to provide your own logic.
      */
     toolDidUpdate() {
-      const overridden = typeof this.componentRef.toolDidUpdate === 'function';
-      console.warn('update triggered');
-      if (!overridden || this.componentRef.toolDidUpdate() !== false) {
-        console.warn('forcing update', overridden, this.componentRef);
-        this.forceUpdate();
-      }
+      this.forceUpdate();
     }
 
     handleChange() {
@@ -125,7 +118,6 @@ export const makeTool = (
         return (
           <Provider store={store}>
             <WrappedComponent
-              ref={this.componentRef}
               {...componentProps}
             />
           </Provider>
