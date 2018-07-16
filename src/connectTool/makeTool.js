@@ -70,7 +70,8 @@ export const makeTool = (
      * You could also override this to provide your own logic.
      */
     toolDidUpdate() {
-      if(this.componentRef.toolDidUpdate() !== false) {
+      const overridden = typeof this.componentRef.toolDidUpdate === 'function';
+      if (!overridden || this.componentRef.toolDidUpdate() !== false) {
         this.forceUpdate();
       }
     }
