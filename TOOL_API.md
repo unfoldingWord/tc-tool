@@ -1,6 +1,8 @@
-# Tool Api
+# tC Tool API
 
-> NOTE: Tools will often use two different APIs: The Tool API, and the tC API.
+The tool API is a special class that exposes tool functionality to the rest of the world.
+
+> NOTE: Tools will often use two different APIs: The Tool API, and the [tC API](https://github.com/unfoldingWord-dev/translationCore/blob/develop/API.md).
 > For information regarding the tC API see the tC documentation.
 
 `connectTool` gives you the ability to expose an API to translationCore (tC) and supporting tools.
@@ -128,7 +130,7 @@ Called every time the state changes.
 ### stateChangeThrottled()
 
 ```js
-stateChangeThrottled
+stateChangeThrottled()
 ```
 
 Called at most once per second when the state changes.
@@ -141,7 +143,12 @@ A tool's API is made available in several different locations.
 
 ### In the tool's Container
 
-A tool's container is given an instance of the API as a prop named `toolAPI`. The is the un-wrapped instance of the tool's API class. Other tools and tC do not have direct access to another tool's API but must instead use an `ApiController` to make requests.
+A tool's container is given an instance of the API as a prop nested under `{tool: {api}}`. The is the un-wrapped instance of the tool's API class. Other tools and tC do not have direct access to another tool's API but must instead use an `ApiController` to make requests.
+
+Example:
+```js
+const {tool: {api}} = this.props;
+```
 
 ### In other tools
 
@@ -149,6 +156,7 @@ Other tools do not have direct access to other APIs. They are instead given an `
 
 Tools may access an API from another tool from a prop named `tc.tools` which is simply a dictionary of APIs keyed by the tool id. For example, the translationWords tool may access the wordAlignment API in the following manner:
 
+Example:
 ```js
 const {tc: {tools: wordAlignment }} = this.props;
 ```

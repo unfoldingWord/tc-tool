@@ -1,6 +1,6 @@
 {
   "name": "tc-tool",
-  "version": "1.5.0",
+  "version": "1.6.3",
   "description": "A HOC that provides a tool interface with the tC core",
   "main": "dist/index.js",
   "scripts": {
@@ -32,6 +32,7 @@
     "fs-extra": "^4.0.3",
     "lodash": "^4.17.5",
     "os-locale": "^2.1.0",
+    "path-extra": "^4.2.1",
     "prop-types": "^15.6.0",
     "react-localize-redux": "^2.15.1",
     "redux-logger": "^3.0.6",
@@ -53,8 +54,8 @@
     "eslint-plugin-jest": "^21.12.2",
     "eslint-plugin-react": "^7.7.0",
     "jest": "^22.4.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0",
     "react-redux": "^5.0.7",
     "react-test-renderer": "^16.2.0",
     "redux": "^3.7.2",
@@ -62,7 +63,7 @@
     "redux-mock-store": "^1.5.1"
   },
   "peerDependencies": {
-    "react": "^16.0.0",
+    "react": "^16.3.0",
     "redux": "^2.0.0 || ^3.0.0",
     "react-redux": "^5.0.0",
     "react-dom": "^16.0.0"

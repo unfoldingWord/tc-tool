@@ -64,7 +64,7 @@ const connectTool = (namespace, options = {}) => {
     return {
       name: namespace,
       api: controlledApi,
-      container: makeTool(WrappedComponent, store,
+      container: makeTool(WrappedComponent, namespace, store,
         hasLocale ? localeDir : undefined, api)
     };
   };
