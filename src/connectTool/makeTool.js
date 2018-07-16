@@ -36,6 +36,8 @@ export const makeTool = (
       this.handleChange = this.handleChange.bind(this);
       this.toolDidUpdate = this.toolDidUpdate.bind(this);
 
+      this.componentRef = React.createRef();
+
       this.state = {
         broken: false,
         error: null,
@@ -68,7 +70,9 @@ export const makeTool = (
      * You could also override this to provide your own logic.
      */
     toolDidUpdate() {
-      this.forceUpdate();
+      if(this.componentRef.toolDidUpdate() !== false) {
+        this.forceUpdate();
+      }
     }
 
     handleChange() {
@@ -118,6 +122,7 @@ export const makeTool = (
         return (
           <Provider store={store}>
             <WrappedComponent
+              ref={this.componentRef}
               {...componentProps}
             />
           </Provider>
