@@ -71,7 +71,9 @@ export const makeTool = (
      */
     toolDidUpdate() {
       const overridden = typeof this.componentRef.toolDidUpdate === 'function';
+      console.warn('update triggered');
       if (!overridden || this.componentRef.toolDidUpdate() !== false) {
+        console.warn('forcing update');
         this.forceUpdate();
       }
     }
