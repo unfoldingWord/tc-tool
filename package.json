@@ -1,6 +1,6 @@
 {
   "name": "tc-tool",
-  "version": "1.7.0",
+  "version": "2.0.0-rc.1",
   "description": "A HOC that provides a tool interface with tC core",
   "main": "dist/index.js",
   "scripts": {
