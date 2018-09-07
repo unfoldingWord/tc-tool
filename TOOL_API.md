@@ -93,13 +93,19 @@ toolWillConnect()
 
 Called before the tool mounts in tC.
 
+This is usually when you will load any data associated with the tool.
+While loading data it is strongly recommended to indicate when the tool is loading and when it is ready.
+You can do so with `setToolLoading` and `setToolReady`. See [tool props](./TOOL_PROPS.md) for more information.
+
+Indicating when the tool is loading data will help other control structures to behave properly.
+
 ### toolWillReceiveProps()
 
 ```js
 toolWillReceiveProps(nextProps)
 ```
 
-Called when the tool is about to receive new props. 
+Called when the tool is about to receive new props.
 
 ### toolWillDisconnect()
 
@@ -127,6 +133,10 @@ Called every time the state changes.
 
 * **blocking** - will not execute more than once at a single time. If this method returns a promise it will block until resolved.
 
+> TRICKY: This method may be called while your API is loading data into your reducers.
+> If this is undesirable be sure to check if the tool is ready before doing anything.
+> e.g. `this.props.tool.isReady`
+
 ### stateChangeThrottled()
 
 ```js
@@ -136,6 +146,10 @@ stateChangeThrottled()
 Called at most once per second when the state changes.
 
 * **blocking** - will not execute more than once at a single time. If this method returns a promise it will block until resolved.
+
+> TRICKY: This method may be called while your API is loading data into your reducers.
+> If this is undesirable be sure to check if the tool is ready before doing anything.
+> e.g. `this.props.tool.isReady`
 
 ## Finding an API
 
