@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "eslint ./src && jest",
-	"prebuild": "rm -rf dist",
+    "prebuild": "rm -rf dist",
     "build": "babel src --out-dir dist --ignore '**/__tests__,**/__mocks__'",
-	"prepare": "if [ ! -d './dist/' ]; then npm run build; fi",
+    "prepare": "if [ ! -d './dist/' ]; then npm run build; fi",
     "prepublishOnly": "npm test && npm run build"
   },
   "repository": {
