@@ -18,6 +18,16 @@ export default class Lifecycle {
   }
 
   /**
+   * Validates a triggered method.
+   * @param {string} method - the name of the lifecycle method being triggered
+   * @param {*} [args] - optional method arguments.
+   * @return {boolean} - true if the method can be triggered, otherwise false.
+   */
+  validateLifecycleTrigger(method, ...args) {  // eslint-disable-line no-unused-vars
+    return true;
+  }
+
+  /**
    * Throws an exception
    * @param {string} message - the error message
    * @private
@@ -66,6 +76,11 @@ export default class Lifecycle {
     }
 
     if (this.methodExists(method)) {
+
+      if(!this.validateLifecycleTrigger(method, ...args)) {
+        Lifecycle._throw(`Trigger rejected for "${method}". Validation failed.`);
+      }
+
       const callable = this._target[method].bind(this._target);
       return callable(...args);
     }

@@ -4,6 +4,8 @@ import * as names from './lifecycleNames';
 import {loadLocalization} from '../state/actions/locale';
 import {setToolLoading, setToolReady} from '../state/actions/loading';
 import {makeToolProps} from '../connectTool/makeProps';
+import {isToolLoading} from '../state/reducers';
+import _ from 'lodash';
 
 /**
  * Wraps a function with another function.
@@ -185,12 +187,44 @@ export default class ApiController extends Lifecycle {
    */
   handleStoreChange() {
     const nextState = this._store.getState();
+    const prevState = this._prevState;
+
     this.triggerBlocking(names.STATE_CHANGED, (e) => {
       this._prevState = nextState;
       if (e) {
         this.triggerDidCatch(e);
       }
     }, nextState, this._prevState);
+
+    // Also trigger prop changes if internal state changed.
+    if(!prevState || !_.isEqual(nextState.internal, prevState.internal)) {
+      // TRICKY: keep current tc props
+      this.triggerWillReceiveProps(this._api.props.tc);
+    }
+  }
+
+  /**
+   * Overrides the lifecycle validation so we can check if the tool is ready for requests.
+   * Reserved lifecycle methods are always allowed
+   * @param {string} method - the name of the lifecycle method
+   * @return {boolean}
+   */
+  validateLifecycleTrigger(method) {
+    const reservedMethods = _.values(names);
+    if(reservedMethods.indexOf(method) === -1 && !this.isReady()) {
+      throw new Error(`Lifecycle Error: Tool APIs cannot receive triggers until they have finished loading.`);
+    } else {
+      return true;
+    }
+  }
+
+  /**
+   * Checks if the tool has finished loading.
+   * @return {boolean}
+   */
+  isReady() {
+    const state = this._store.getState();
+    return isToolLoading(state);
   }
 
   /**

@@ -187,7 +187,8 @@ translationCore has it's own method of accessing tool APIs that is beyond the sc
 
 To access another tool's API you'll need to have it's controller. Once the controller is available there are a number of methods available with which to make requests.
 
-- `trigger(method: string, ...args)`  executes the method if it exists while passing down additional arguments.
+- `isReady()` returns a boolean indicating if the api is ready for use.
+- `trigger(method: string, ...args)` executes the method if it exists while passing down additional arguments.
 - `triggerForced(method: string, ...args)` executes the method while passing down additional arguments or throws an error if it does not exist.
 - `triggerBlocking(method: string, callback: func, ...args)` executes a method as blocking while passing down additional arguments.
 - `methodExists(method: string)` checks if a method exist
@@ -199,3 +200,5 @@ For example, the following code will ask the tool if it's check for verse 1 of c
 const isFinished = api.trigger('getIsVerseFinished', 1, 1);
 ```
 
+It is important to check if the api is ready with `isReady()` before executing any triggers.
+Executing a trigger before the api is ready will result in an exception.
