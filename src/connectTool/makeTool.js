@@ -12,14 +12,14 @@ import {makeToolProps} from './makeProps';
  * @param {string} namespace - the tool namespace/id
  * @param store - the redux store
  * @param {string} localeDir - the directory where locale files will be loaded
- * @param api - the tool's api
+ * @param {ApiController} controlledApi - the tool's controlled api
  * @return {Tool}
  */
 export const makeTool = (
   WrappedComponent, namespace, store, localeDir = undefined,
-  api = undefined) => {
+  controlledApi = undefined) => {
   const hasLocale = Boolean(localeDir);
-  const hasApi = Boolean(api);
+  const hasApi = Boolean(controlledApi);
 
   // checks if the locale has finished loading
   const isLocaleLoaded = () => {
@@ -52,7 +52,8 @@ export const makeTool = (
       }
       this.unsubscribe = store.subscribe(this.handleChange);
       if (hasApi) {
-        this.unsubscribeApi = api.subscribe(this.toolDidUpdate);
+        // Subscribe to the bare API's update trigger
+        this.unsubscribeApi = controlledApi._api.subscribe(this.toolDidUpdate);
       }
     }
 
@@ -107,11 +108,11 @@ export const makeTool = (
           hasLocale);
         const componentProps = {
           ...this.props, // TODO: this is deprecated
-          toolApi: api, // TODO: this is deprecated
+          toolApi: controlledApi, // TODO: this is deprecated
           ...toolProps,
           tool: {
             ...toolProps.tool,
-            api
+            api: controlledApi
           }
         };
 
