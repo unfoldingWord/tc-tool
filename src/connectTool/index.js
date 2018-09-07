@@ -3,6 +3,7 @@ import {getActiveLanguage, getTranslate} from '../state/reducers';
 import fs from 'fs-extra';
 import ApiController from '../api/ApiController';
 import {makeTool} from './makeTool';
+import {version} from '../../package.json';
 
 /**
  * Builds the locale tools
@@ -65,6 +66,7 @@ const connectTool = (namespace, options = {}) => {
     return {
       name: namespace,
       api: controlledApi,
+      tool_interface_version: version,
       container: makeTool(WrappedComponent, namespace, store,
         hasLocale ? localeDir : undefined, api)
     };
