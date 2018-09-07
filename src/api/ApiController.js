@@ -224,7 +224,7 @@ export default class ApiController extends Lifecycle {
    */
   isReady() {
     const state = this._store.getState();
-    return isToolLoading(state);
+    return !isToolLoading(state);
   }
 
   /**

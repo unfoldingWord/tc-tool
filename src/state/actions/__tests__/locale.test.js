@@ -21,6 +21,7 @@ describe('actions', () => {
   describe('create an action to initialize the locale', () => {
 
     it('should inject non-translatable strings', () => {
+      global.console = {warn: jest.fn()};
       let localeDir = path.join(__dirname, './locale/');
       const store = mockStore({});
       store.dispatch(actions.loadLocalization(localeDir, 'en_US'));
@@ -36,9 +37,11 @@ describe('actions', () => {
       expect(translation).toHaveProperty('_');
       expect(translation._).toHaveProperty('locale');
       expect(translation._).toHaveProperty('language_name');
+      expect(console.warn).toBeCalled();
     });
 
     it('should not use the system locale', () => {
+      global.console = {warn: jest.fn()};
       let defaultLanguage = 'en_US';
       let localeDir = path.join(__dirname, './locale/');
       const expectedActionTypes = [
@@ -55,9 +58,11 @@ describe('actions', () => {
         return action.type;
       });
       expect(receivedActionTypes).toEqual(expectedActionTypes);
+      expect(console.warn).toBeCalled();
     });
 
     it('should use the system locale', () => {
+      global.console = {warn: jest.fn()};
       let localeDir = path.join(__dirname, './locale/');
       const expectedActionTypes = [
         '@@localize/INITIALIZE',
@@ -74,6 +79,7 @@ describe('actions', () => {
         return action.type;
       });
       expect(receivedActionTypes).toEqual(expectedActionTypes);
+      expect(console.warn).toBeCalled();
     });
 
     it('should reject if locale dir is missing', () => {
@@ -83,6 +89,7 @@ describe('actions', () => {
     });
 
     it('should use an equivalent locale', () => {
+      global.console = {log: jest.fn(), warn: jest.fn()};
       let defaultLanguage = 'na_MISSING';
       let localeDir = path.join(__dirname, './locale/');
       const expectedActionTypes = [
@@ -116,6 +123,8 @@ describe('actions', () => {
         }
       });
       expect(receivedActionTypes).toEqual(expectedActionTypes);
+      expect(console.log).toBeCalled();
+      expect(console.warn).toBeCalled();
     });
   });
 });

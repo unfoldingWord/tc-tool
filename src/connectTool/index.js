@@ -39,16 +39,16 @@ const connectTool = (namespace, options = {}) => {
 
   if (localeDir && typeof localeDir !== 'string') {
     throw Error(
-      `Invalid parameter. Expected localeDir to be a string but found ${typeof localeDir} instead`);
+      `${namespace}: Invalid parameter. Expected localeDir to be a string but found ${typeof localeDir} instead`);
   }
 
   return (WrappedComponent) => {
-    console.info('Booting tool...');
+    console.info(`${namespace}: Connecting...`);
     const hasLocale = localeDir && fs.existsSync(localeDir);
     if (!localeDir) {
-      console.warn('You should consider localizing this tool.');
+      console.warn(`${namespace}: This tool has not been localized.`);
     } else if (!hasLocale) {
-      console.warn(`No locale found at ${localeDir}`);
+      console.warn(`${namespace}: Could not find locale files in ${localeDir}`);
     }
 
     const store = configureStore(reducer, middlewares);
@@ -56,6 +56,7 @@ const connectTool = (namespace, options = {}) => {
     // wrap api in controller
     let controlledApi = undefined;
     if (api) {
+      console.info(`${namespace}: Exposing API...`);
       api.toString = () => namespace;
       controlledApi = new ApiController(api, store,
         hasLocale ? localeDir : undefined);
@@ -65,7 +66,7 @@ const connectTool = (namespace, options = {}) => {
       name: namespace,
       api: controlledApi,
       container: makeTool(WrappedComponent, namespace, store,
-        hasLocale ? localeDir : undefined, controlledApi._api)
+        hasLocale ? localeDir : undefined, api)
     };
   };
 };

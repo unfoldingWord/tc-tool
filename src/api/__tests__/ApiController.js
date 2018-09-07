@@ -1,6 +1,7 @@
 import ApiController, {wrapFunc} from '../ApiController';
 import configureMockStore from 'redux-mock-store';
 import {translate as mockTranslate} from 'react-localize-redux';
+import _ from 'lodash';
 
 const middlewares = [];
 const mockStore = configureMockStore(middlewares);
@@ -22,7 +23,8 @@ describe('Lifecycle', () => {
     jest.clearAllMocks();
     store = mockStore({
       internal: {
-        locale: {}
+        locale: {},
+        loading: false
       }
     });
     obj = {
@@ -42,6 +44,17 @@ describe('Lifecycle', () => {
   it('executes an existing method', () => {
     const wrappedObj = new ApiController(obj, store);
     expect(wrappedObj.trigger('hello')).toEqual('world');
+  });
+
+  it('cannot execute an existing method when not ready', () => {
+    store = mockStore({
+      internal: {
+        locale: {},
+        loading: true // tool is still loading
+      }
+    });
+    const wrappedObj = new ApiController(obj, store);
+    expect(() => {wrappedObj.trigger('hello')}).toThrow();
   });
 
   it('executes receive props lifecycle with mapped state to props', () => {

@@ -44,7 +44,6 @@ export const makeTool = (
     }
 
     componentWillMount() {
-      // TODO: load this right away
       const {appLanguage} = this.props;
       // TRICKY: if an api exists the locale will be loaded there.
       if (hasLocale && !hasApi) {

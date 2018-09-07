@@ -20,6 +20,7 @@
     "url": "https://github.com/translationCoreApps/tc-tool/issues"
   },
   "jest": {
+    "testURL": "http://localhost",
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
       "!**/node_modules/**",

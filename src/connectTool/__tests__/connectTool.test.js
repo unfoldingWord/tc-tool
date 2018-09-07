@@ -42,12 +42,10 @@ describe('props', () => {
   });
 
   test('missing locale dir', () => {
+    global.console = { warn: jest.fn(), info: jest.fn() };
     const ConnectedComponent = connectTool('tool', {})(TestComponent);
     const wrapper = mount(
-      <ConnectedComponent.container currentToolViews={{}}
-                                    resourcesReducer={{}}
-                                    contextIdReducer={{}}
-                                    writeProjectData={jest.fn()}
+      <ConnectedComponent.container writeProjectData={jest.fn()}
                                     readProjectData={jest.fn()}
                                     readProjectDataSync={jest.fn()}
                                     deleteProjectFile={jest.fn()}
@@ -59,15 +57,14 @@ describe('props', () => {
     expect(component.props().tc.appLanguage).toEqual('en_US');
     expect(component.props().currentLanguage).not.toBeDefined();
     expect(component.props().translate).not.toBeDefined();
+    expect(console.warn).toBeCalled();
   });
 
   test('with locale', () => {
+    global.console = { info: jest.fn() };
     const ConnectedComponent = connectTool('tool', {localeDir})(TestComponent);
     const wrapper = mount(
-      <ConnectedComponent.container currentToolViews={{}}
-                                    resourcesReducer={{}}
-                                    contextIdReducer={{}}
-                                    writeProjectData={jest.fn()}
+      <ConnectedComponent.container writeProjectData={jest.fn()}
                                     readProjectData={jest.fn()}
                                     readProjectDataSync={jest.fn()}
                                     deleteProjectFile={jest.fn()}
@@ -82,35 +79,42 @@ describe('props', () => {
   });
 
   test('missing app language', () => {
+    global.console = { error: jest.fn(), info: jest.fn() };
     const ConnectedComponent = connectTool('tool', {localeDir})(TestComponent);
     const wrapper = mount(
-      <ConnectedComponent.container currentToolViews={{}}
-                                    resourcesReducer={{}}
-                                    writeProjectData={jest.fn()}
+      <ConnectedComponent.container writeProjectData={jest.fn()}
                                     readProjectData={jest.fn()}
                                     readProjectDataSync={jest.fn()}
                                     deleteProjectFile={jest.fn()}
                                     projectDataPathExists={jest.fn()}
-                                    projectDataPathExistsSync={jest.fn()}
-                                    contextIdReducer={{}}/>
+                                    projectDataPathExistsSync={jest.fn()}/>
     );
     const component = wrapper.find('TestComponent');
     expect(component.props().appLanguage).not.toBeDefined();
     expect(component.props().currentLanguage).toEqual('en_US');
-    // a warning will be displayed in the console, otherwise the default locale will be selected
     expect(component.props().translate).toBeDefined();
+    expect(console.error).toBeCalled();
   });
 });
 
 describe('snapshots', () => {
 
+  function onError(e) {
+    e.preventDefault();
+  }
+
+  beforeEach(() => {
+    window.addEventListener('error', onError);
+  });
+
+  afterEach(() => {
+    window.removeEventListener('error', onError);
+  });
+
   it('renders the wrapped component', () => {
     const ConnectedComponent = connectTool('tool', {localeDir})(TestComponent);
     const wrapper = renderer.create(
-      <ConnectedComponent.container currentToolViews={{}}
-                                    resourcesReducer={{}}
-                                    contextIdReducer={{}}
-                                    writeProjectData={jest.fn()}
+      <ConnectedComponent.container writeProjectData={jest.fn()}
                                     readProjectData={jest.fn()}
                                     readProjectDataSync={jest.fn()}
                                     deleteProjectFile={jest.fn()}
@@ -122,13 +126,11 @@ describe('snapshots', () => {
   });
 
   it('renders the error screen', () => {
+    global.console = { error: jest.fn(), info: jest.fn() };
     const ConnectedComponent = connectTool('tool', {localeDir})(
       BrokenComponent);
     const wrapper = renderer.create(
-      <ConnectedComponent.container currentToolViews={{}}
-                                    resourcesReducer={{}}
-                                    contextIdReducer={{}}
-                                    writeProjectData={jest.fn()}
+      <ConnectedComponent.container writeProjectData={jest.fn()}
                                     readProjectData={jest.fn()}
                                     readProjectDataSync={jest.fn()}
                                     deleteProjectFile={jest.fn()}
@@ -137,6 +139,7 @@ describe('snapshots', () => {
                                     appLanguage="de_DE"/>
     );
     expect(wrapper).toMatchSnapshot();
+    expect(console.error).toBeCalled();
   });
 
 });
