@@ -202,3 +202,10 @@ const isFinished = api.trigger('getIsVerseFinished', 1, 1);
 
 It is important to check if the api is ready with `isReady()` before executing any triggers.
 Executing a trigger before the api is ready will result in an exception.
+
+## Some Conventions for Sanity
+
+In order to prevent complicated problems here are some conventions to follow when designing and using an api.
+
+* Only the currently loaded tool should perform api requests. The api's provided by the rest of the tools are simply there to be read.
+* A public api method should never write anything to the disk. Use the `stateChanged` methods for persisting things to disk instead.

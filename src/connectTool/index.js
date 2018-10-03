@@ -49,7 +49,7 @@ const connectTool = (namespace, options = {}) => {
     if (!localeDir) {
       console.warn(`${namespace}: This tool has not been localized.`);
     } else if (!hasLocale) {
-      console.warn(`${namespace}: Could not find locale files in ${localeDir}`);
+      console.error(`${namespace}: Could not find locale files in ${localeDir}`);
     }
 
     const store = configureStore(reducer, middlewares);
