@@ -89,7 +89,7 @@ describe('actions', () => {
     });
 
     it('should use an equivalent locale', () => {
-      global.console = {debug: jest.fn(), warn: jest.fn()};
+      global.console = {info: jest.fn(), warn: jest.fn()};
       let defaultLanguage = 'na_MISSING';
       let localeDir = path.join(__dirname, './locale/');
       const expectedActionTypes = [
@@ -123,7 +123,7 @@ describe('actions', () => {
         }
       });
       expect(receivedActionTypes).toEqual(expectedActionTypes);
-      expect(console.debug).toBeCalled();
+      expect(console.info).toBeCalled();
       expect(console.warn).toBeCalled();
     });
   });
