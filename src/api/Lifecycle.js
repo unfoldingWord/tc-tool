@@ -19,6 +19,7 @@ export default class Lifecycle {
 
   /**
    * Validates a triggered method.
+   * This can be overridden to provide custom validation
    * @param {string} method - the name of the lifecycle method being triggered
    * @param {*} [args] - optional method arguments.
    * @return {boolean} - true if the method can be triggered, otherwise false.

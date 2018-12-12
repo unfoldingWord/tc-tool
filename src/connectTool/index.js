@@ -44,7 +44,7 @@ const connectTool = (namespace, options = {}) => {
   }
 
   return (WrappedComponent) => {
-    console.info(`${namespace}: Connecting...`);
+    console.debug(`${namespace}: Connecting...`);
     const hasLocale = localeDir && fs.existsSync(localeDir);
     if (!localeDir) {
       console.warn(`${namespace}: This tool has not been localized.`);
@@ -57,7 +57,7 @@ const connectTool = (namespace, options = {}) => {
     // wrap api in controller
     let controlledApi = undefined;
     if (api) {
-      console.info(`${namespace}: Exposing API...`);
+      console.debug(`${namespace}: Exposing API...`);
       api.toString = () => namespace;
       controlledApi = new ApiController(api, store,
         hasLocale ? localeDir : undefined);
