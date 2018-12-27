@@ -23,7 +23,7 @@ export const makeTool = (
 
   // checks if the locale has finished loading
   const isLocaleLoaded = () => {
-    return !hasLocale || getLocaleLoaded(store.getState());
+    return hasLocale || getLocaleLoaded(store.getState());
   };
 
   // TRICKY: this will overwrite the default store context key
