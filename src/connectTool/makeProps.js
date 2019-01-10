@@ -57,7 +57,7 @@ class ToolProps {
         readToolData: this._onReadToolData,
         readToolDataSync: this._onReadToolDataSync,
         writeToolData: this._onWriteToolData,
-        name: namespace,
+        name: this.namespace,
         isReady: toolIsReady
       }
     };
