@@ -48,7 +48,6 @@ class ToolProps {
     const toolIsReady = !isToolLoading(this.state);
     return {
       ...localeProps, // TODO: deprecated
-      toolIsReady, // TODO: deprecated
       tc: {...this.props},
       tool: {
         ...localeProps,
@@ -58,6 +57,7 @@ class ToolProps {
         readToolData: this._onReadToolData,
         readToolDataSync: this._onReadToolDataSync,
         writeToolData: this._onWriteToolData,
+        name: namespace,
         isReady: toolIsReady
       }
     };
