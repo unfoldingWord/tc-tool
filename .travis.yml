@@ -5,11 +5,10 @@ node_js:
 os:
   - linux
 before_install:
-  - npm i -g npm@5.6.0
+  - npm i -g npm@6.4.1 jest codecov
   - npm --version
 install:
-  - npm i
-  - npm i -g jest codecov
+  - npm ci
 script:
   - eslint ./src && jest --coverage
   - codecov

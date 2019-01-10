@@ -164,7 +164,7 @@ const setActiveLanguageSafely = (dispatch, locale, languages, translations) => {
   } else if (_.indexOf(languages, shortLocale) >= 0) {
     // equivalent locale
     let equivalentLocale = translations[shortLocale]['_']['locale'];
-    console.log(`Using equivalent locale: ${equivalentLocale}`);
+    console.info(`Using equivalent locale: ${equivalentLocale}`);
     dispatch(setActiveLanguage(equivalentLocale));
   } else {
     console.error(`Tool found no translations for locale: ${locale}`);
