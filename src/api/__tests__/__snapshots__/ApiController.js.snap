@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Lifecycle executes receive props lifecycle 1`] = `
+Array [
+  "toolDataPathExists",
+  "toolDataPathExistsSync",
+  "deleteToolFile",
+  "readToolData",
+  "readToolDataSync",
+  "writeToolData",
+  "name",
+  "isReady",
+  "setToolReady",
+  "setToolLoading",
+]
+`;
+
+exports[`Lifecycle executes receive props lifecycle 2`] = `
+Object {
+  "tc": Object {
+    "foo": "bar",
+  },
+}
+`;
+
+exports[`Lifecycle executes receive props lifecycle with mapped state to props 1`] = `
+Array [
+  "toolDataPathExists",
+  "toolDataPathExistsSync",
+  "deleteToolFile",
+  "readToolData",
+  "readToolDataSync",
+  "writeToolData",
+  "name",
+  "isReady",
+  "setToolReady",
+  "setToolLoading",
+]
+`;
+
+exports[`Lifecycle executes receive props lifecycle with mapped state to props 2`] = `
+Object {
+  "hello": "world",
+  "tc": Object {
+    "foo": "bar",
+  },
+}
+`;
+
+exports[`Lifecycle executes the connect lifecycle 1`] = `
+Array [
+  "toolDataPathExists",
+  "toolDataPathExistsSync",
+  "deleteToolFile",
+  "readToolData",
+  "readToolDataSync",
+  "writeToolData",
+  "name",
+  "isReady",
+  "setToolReady",
+  "setToolLoading",
+]
+`;
+
+exports[`Lifecycle executes the connect lifecycle 2`] = `
+Object {
+  "tc": Object {
+    "appLanguage": "en_US",
+    "hello": "world",
+  },
+}
+`;
+
+exports[`Lifecycle pre-processes props to receive props lifecycle 1`] = `
+Array [
+  "translate",
+  "currentLanguage",
+  "toolDataPathExists",
+  "toolDataPathExistsSync",
+  "deleteToolFile",
+  "readToolData",
+  "readToolDataSync",
+  "writeToolData",
+  "name",
+  "isReady",
+  "setToolReady",
+  "setToolLoading",
+]
+`;

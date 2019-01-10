@@ -73,24 +73,9 @@ describe('Lifecycle', () => {
       delete obj.props.setToolLoading;
       delete obj.props.setToolReady;
     }
-    expect(Object.keys(obj.props.tool)).toEqual([
-      'toolDataPathExists',
-      'toolDataPathExistsSync',
-      'deleteToolFile',
-      'readToolData',
-      'readToolDataSync',
-      'writeToolData',
-      'isReady',
-      'setToolReady',
-      'setToolLoading'
-    ]);
+    expect(Object.keys(obj.props.tool)).toMatchSnapshot();
     delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
-    expect(obj.props).toEqual({
-      tc: {foo: 'bar'},
-      hello: 'world',
-
-      toolIsReady: true
-    });
+    expect(obj.props).toMatchSnapshot();
   });
 
   it('executes receive props lifecycle', () => {
@@ -104,22 +89,9 @@ describe('Lifecycle', () => {
       delete obj.props.setToolLoading;
       delete obj.props.setToolReady;
     }
-    expect(Object.keys(obj.props.tool)).toEqual([
-      'toolDataPathExists',
-      'toolDataPathExistsSync',
-      'deleteToolFile',
-      'readToolData',
-      'readToolDataSync',
-      'writeToolData',
-      'isReady',
-      'setToolReady',
-      'setToolLoading'
-    ]);
+    expect(Object.keys(obj.props.tool)).toMatchSnapshot();
     delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
-    expect(obj.props).toEqual({
-      tc: {foo: 'bar'},
-      toolIsReady: true
-    });
+    expect(obj.props).toMatchSnapshot();
     expect(obj.mapStateToProps).toBeCalled();
     expect(obj.mapDispatchToProps).toBeCalled();
     expect(obj.toolWillReceiveProps).toBeCalled();
@@ -129,19 +101,7 @@ describe('Lifecycle', () => {
     const wrappedObj = new ApiController(obj, store, 'some/dir');
     const props = {foo: 'bar'};
     wrappedObj.triggerWillReceiveProps(props);
-    expect(Object.keys(obj.props.tool)).toEqual([
-      'translate',
-      'currentLanguage',
-      'toolDataPathExists',
-      'toolDataPathExistsSync',
-      'deleteToolFile',
-      'readToolData',
-      'readToolDataSync',
-      'writeToolData',
-      'isReady',
-      'setToolReady',
-      'setToolLoading'
-    ]);
+    expect(Object.keys(obj.props.tool)).toMatchSnapshot();
     delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
     expect(obj.props).toEqual({
       currentLanguage: 'en_US',
@@ -149,8 +109,7 @@ describe('Lifecycle', () => {
       tc: {foo: 'bar'},
       // TRICKY: these are generated every time so we validate them above
       setToolLoading: obj.props.setToolLoading,
-      setToolReady: obj.props.setToolReady,
-      toolIsReady: true
+      setToolReady: obj.props.setToolReady
     });
   });
 
@@ -168,25 +127,9 @@ describe('Lifecycle', () => {
       delete obj.props.setToolLoading;
       delete obj.props.setToolReady;
     }
-    expect(Object.keys(obj.props.tool)).toEqual([
-      'toolDataPathExists',
-      'toolDataPathExistsSync',
-      'deleteToolFile',
-      'readToolData',
-      'readToolDataSync',
-      'writeToolData',
-      'isReady',
-      'setToolReady',
-      'setToolLoading'
-    ]);
+    expect(Object.keys(obj.props.tool)).toMatchSnapshot();
     delete obj.props.tool; // TRICKY: these are dynamic so we delete before asserting structure
-    expect(obj.props).toEqual({
-      tc: {
-        appLanguage: 'en_US',
-        hello: 'world'
-      },
-      toolIsReady: true
-    });
+    expect(obj.props).toMatchSnapshot();
   });
 
   it('executes the disconnect lifecycle', () => {
