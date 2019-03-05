@@ -40,7 +40,7 @@
     "prop-types": "^15.6.0",
     "react-localize-redux": "^2.15.1",
     "redux-logger": "^3.0.6",
-    "redux-promise": "^0.5.3",
+    "redux-promise": "^0.6.0",
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
