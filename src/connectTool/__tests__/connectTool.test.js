@@ -124,22 +124,4 @@ describe('snapshots', () => {
     );
     expect(wrapper).toMatchSnapshot();
   });
-
-  it('renders the error screen', () => {
-    global.console = { error: jest.fn(), info: jest.fn() };
-    const ConnectedComponent = connectTool('tool', {localeDir})(
-      BrokenComponent);
-    const wrapper = renderer.create(
-      <ConnectedComponent.container writeProjectData={jest.fn()}
-                                    readProjectData={jest.fn()}
-                                    readProjectDataSync={jest.fn()}
-                                    deleteProjectFile={jest.fn()}
-                                    projectDataPathExists={jest.fn()}
-                                    projectDataPathExistsSync={jest.fn()}
-                                    appLanguage="de_DE"/>
-    );
-    expect(wrapper).toMatchSnapshot();
-    expect(console.error).toBeCalled();
-  });
-
 });
