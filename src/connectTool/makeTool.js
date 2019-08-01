@@ -1,7 +1,6 @@
 import React from 'react';
 import {createProvider} from 'react-redux';
 import PropTypes from 'prop-types';
-import BrokenScreen from '../BrokenScreen';
 import {getLocaleLoaded} from '../state/reducers';
 import {loadLocalization, setActiveLocale} from '../state/actions/locale';
 import {makeToolProps} from './makeProps';
@@ -35,12 +34,6 @@ export const makeTool = (
       super(props);
       this.handleChange = this.handleChange.bind(this);
       this.toolDidUpdate = this.toolDidUpdate.bind(this);
-
-      this.state = {
-        broken: false,
-        error: null,
-        info: null
-      };
     }
 
     componentWillMount() {
@@ -75,14 +68,6 @@ export const makeTool = (
       this.forceUpdate();
     }
 
-    componentDidCatch(error, info) {
-      this.setState({
-        broken: true,
-        error,
-        info
-      });
-    }
-
     componentWillReceiveProps(nextProps) {
       // TODO: this is an anti-pattern. see https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
       // stay in sync with the application language
@@ -92,14 +77,7 @@ export const makeTool = (
     }
 
     render() {
-      const {broken, error, info} = this.state;
-      if (broken) {
-        return (
-          <BrokenScreen title="ERROR"
-                        error={error}
-                        info={info}/>
-        );
-      } else if (!isLocaleLoaded()) {
+      if (!isLocaleLoaded()) {
         // TODO: we could display a loading screen while the tool loads
         return null;
       } else {

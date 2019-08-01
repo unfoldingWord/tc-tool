@@ -143,6 +143,6 @@ For more information about APIs see [Tool API](./TOOL_API.md).
 
 ## Other Features
 
-### Error Boundary
+### Error Boundary (Deprecated)
 
 A semi-user-friendly error screen is displayed if an error occurs within the tool. This allows users to navigate to a safe part of the app.
