@@ -5,7 +5,6 @@ import {getLocaleLoaded} from '../state/reducers';
 import {loadLocalization, setActiveLocale} from '../state/actions/locale';
 import {makeToolProps} from './makeProps';
 
-console.log(createProvider);
 /**
  * Generates the tool component
  * @param WrappedComponent
@@ -79,12 +78,23 @@ export const makeTool = (
 
      componentDidCatch(error, info) {
       console.log('componentDidCatch maketool');
-      console.error(error);
-      console.info(info);
+      this.setState({	
+        broken: true,	
+        error,	
+        info	
+      });
     }
 
     render() {
-      if (!isLocaleLoaded()) {
+      const {broken, error, info} = this.state;	
+      if (broken) {	
+        return (	
+          <div>
+            <div>{error}</div>	
+            <div>{info}</div>
+          </div>
+        );	
+      } else if (!isLocaleLoaded()) {
         // TODO: we could display a loading screen while the tool loads
         return null;
       } else {
