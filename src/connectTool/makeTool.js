@@ -5,6 +5,7 @@ import {getLocaleLoaded} from '../state/reducers';
 import {loadLocalization, setActiveLocale} from '../state/actions/locale';
 import {makeToolProps} from './makeProps';
 
+console.log(createProvider);
 /**
  * Generates the tool component
  * @param WrappedComponent
