@@ -25,60 +25,25 @@ describe('actions', () => {
       let localeDir = path.join(__dirname, './locale/');
       const store = mockStore({});
       store.dispatch(actions.loadLocalization(localeDir, 'en_US'));
-
-      let addTranslationActions = store.getActions().map(action => {
-        if (action.type ===
-          '@@localize/ADD_TRANSLATION_FOR_LANGUGE') return action;
-      });
-      addTranslationActions = _.compact(addTranslationActions);
-      expect(addTranslationActions).toHaveLength(4);
-      const action = addTranslationActions[0];
-      const translation = action.payload.translation;
-      expect(translation).toHaveProperty('_');
-      expect(translation._).toHaveProperty('locale');
-      expect(translation._).toHaveProperty('language_name');
-      expect(console.warn).toBeCalled();
+      expect(store.getActions()).toMatchSnapshot();
     });
 
     it('should not use the system locale', () => {
       global.console = {warn: jest.fn()};
       let defaultLanguage = 'en_US';
       let localeDir = path.join(__dirname, './locale/');
-      const expectedActionTypes = [
-        '@@localize/INITIALIZE',
-        '@@localize/ADD_TRANSLATION_FOR_LANGUGE', //en_US
-        '@@localize/ADD_TRANSLATION_FOR_LANGUGE', // for short locale addition
-        '@@localize/ADD_TRANSLATION_FOR_LANGUGE', //na_NA
-        '@@localize/ADD_TRANSLATION_FOR_LANGUGE', // for short locale addition
-        '@@tool/LOCALE_LOADED'
-      ];
       const store = mockStore({});
       store.dispatch(actions.loadLocalization(localeDir, defaultLanguage));
-      let receivedActionTypes = store.getActions().map(action => {
-        return action.type;
-      });
-      expect(receivedActionTypes).toEqual(expectedActionTypes);
+      expect(store.getActions()).toMatchSnapshot();
       expect(console.warn).toBeCalled();
     });
 
     it('should use the system locale', () => {
       global.console = {warn: jest.fn()};
       let localeDir = path.join(__dirname, './locale/');
-      const expectedActionTypes = [
-        '@@localize/INITIALIZE',
-        '@@localize/ADD_TRANSLATION_FOR_LANGUGE', //en_US
-        '@@localize/ADD_TRANSLATION_FOR_LANGUGE', // for short locale addition
-        '@@localize/ADD_TRANSLATION_FOR_LANGUGE', //na_NA
-        '@@localize/ADD_TRANSLATION_FOR_LANGUGE', // for short locale addition
-        '@@localize/SET_ACTIVE_LANGUAGE',
-        '@@tool/LOCALE_LOADED'
-      ];
       const store = mockStore({});
       store.dispatch(actions.loadLocalization(localeDir));
-      let receivedActionTypes = store.getActions().map(action => {
-        return action.type;
-      });
-      expect(receivedActionTypes).toEqual(expectedActionTypes);
+      expect(store.getActions()).toMatchSnapshot();
       expect(console.warn).toBeCalled();
     });
 
@@ -92,37 +57,9 @@ describe('actions', () => {
       global.console = {info: jest.fn(), warn: jest.fn()};
       let defaultLanguage = 'na_MISSING';
       let localeDir = path.join(__dirname, './locale/');
-      const expectedActionTypes = [
-        {type: '@@localize/INITIALIZE', languageCode: undefined},
-        {
-          type: '@@localize/ADD_TRANSLATION_FOR_LANGUGE',
-          languageCode: undefined
-        }, // en_US
-        {
-          type: '@@localize/ADD_TRANSLATION_FOR_LANGUGE',
-          languageCode: undefined
-        }, // for short locale addition
-        {
-          type: '@@localize/ADD_TRANSLATION_FOR_LANGUGE',
-          languageCode: undefined
-        }, // na_NA
-        {
-          type: '@@localize/ADD_TRANSLATION_FOR_LANGUGE',
-          languageCode: undefined
-        }, // for short locale addition
-        {type: '@@localize/SET_ACTIVE_LANGUAGE', languageCode: 'na_NA'},
-        {type: '@@tool/LOCALE_LOADED'}
-      ];
       const store = mockStore({});
       store.dispatch(actions.loadLocalization(localeDir, defaultLanguage));
-      let receivedActionTypes = store.getActions().map(action => {
-        if (action.type.startsWith('@@localize')) {
-          return {type: action.type, languageCode: action.payload.languageCode};
-        } else {
-          return {type: action.type};
-        }
-      });
-      expect(receivedActionTypes).toEqual(expectedActionTypes);
+      expect(store.getActions()).toMatchSnapshot();
       expect(console.info).toBeCalled();
       expect(console.warn).toBeCalled();
     });
