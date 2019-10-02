@@ -1,0 +1,393 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`actions create an action to initialize the locale should inject non-translatable strings 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "languages": Array [
+        Object {
+          "code": "en_US",
+          "name": "English",
+        },
+        Object {
+          "code": "en",
+          "name": "English",
+        },
+        Object {
+          "code": "na_NA",
+          "name": "Name",
+        },
+        Object {
+          "code": "na",
+          "name": "Name",
+        },
+      ],
+      "options": Object {
+        "defaultLanguage": "en_US",
+        "missingTranslationCallback": [Function],
+      },
+    },
+    "type": "@@localize/INITIALIZE",
+  },
+  Object {
+    "meta": Object {
+      "batch": true,
+    },
+    "payload": Array [
+      Object {
+        "payload": Object {
+          "language": "en_US",
+          "translation": Object {
+            "_": Object {
+              "language_name": "English",
+              "locale": "en_US",
+              "short_locale": "en",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "en",
+          "translation": Object {
+            "_": Object {
+              "language_name": "English",
+              "locale": "en_US",
+              "short_locale": "en",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "na_NA",
+          "translation": Object {
+            "_": Object {
+              "language_name": "Name",
+              "locale": "na_NA",
+              "short_locale": "na",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "na",
+          "translation": Object {
+            "_": Object {
+              "language_name": "Name",
+              "locale": "na_NA",
+              "short_locale": "na",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+    ],
+    "type": "BATCHING_REDUCER.BATCH",
+  },
+  Object {
+    "type": "@@tool/LOCALE_LOADED",
+  },
+]
+`;
+
+exports[`actions create an action to initialize the locale should not use the system locale 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "languages": Array [
+        Object {
+          "code": "en_US",
+          "name": "English",
+        },
+        Object {
+          "code": "en",
+          "name": "English",
+        },
+        Object {
+          "code": "na_NA",
+          "name": "Name",
+        },
+        Object {
+          "code": "na",
+          "name": "Name",
+        },
+      ],
+      "options": Object {
+        "defaultLanguage": "en_US",
+        "missingTranslationCallback": [Function],
+      },
+    },
+    "type": "@@localize/INITIALIZE",
+  },
+  Object {
+    "meta": Object {
+      "batch": true,
+    },
+    "payload": Array [
+      Object {
+        "payload": Object {
+          "language": "en_US",
+          "translation": Object {
+            "_": Object {
+              "language_name": "English",
+              "locale": "en_US",
+              "short_locale": "en",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "en",
+          "translation": Object {
+            "_": Object {
+              "language_name": "English",
+              "locale": "en_US",
+              "short_locale": "en",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "na_NA",
+          "translation": Object {
+            "_": Object {
+              "language_name": "Name",
+              "locale": "na_NA",
+              "short_locale": "na",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "na",
+          "translation": Object {
+            "_": Object {
+              "language_name": "Name",
+              "locale": "na_NA",
+              "short_locale": "na",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+    ],
+    "type": "BATCHING_REDUCER.BATCH",
+  },
+  Object {
+    "type": "@@tool/LOCALE_LOADED",
+  },
+]
+`;
+
+exports[`actions create an action to initialize the locale should use an equivalent locale 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "languages": Array [
+        Object {
+          "code": "en_US",
+          "name": "English",
+        },
+        Object {
+          "code": "en",
+          "name": "English",
+        },
+        Object {
+          "code": "na_NA",
+          "name": "Name",
+        },
+        Object {
+          "code": "na",
+          "name": "Name",
+        },
+      ],
+      "options": Object {
+        "defaultLanguage": "en_US",
+        "missingTranslationCallback": [Function],
+      },
+    },
+    "type": "@@localize/INITIALIZE",
+  },
+  Object {
+    "meta": Object {
+      "batch": true,
+    },
+    "payload": Array [
+      Object {
+        "payload": Object {
+          "language": "en_US",
+          "translation": Object {
+            "_": Object {
+              "language_name": "English",
+              "locale": "en_US",
+              "short_locale": "en",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "en",
+          "translation": Object {
+            "_": Object {
+              "language_name": "English",
+              "locale": "en_US",
+              "short_locale": "en",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "na_NA",
+          "translation": Object {
+            "_": Object {
+              "language_name": "Name",
+              "locale": "na_NA",
+              "short_locale": "na",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "na",
+          "translation": Object {
+            "_": Object {
+              "language_name": "Name",
+              "locale": "na_NA",
+              "short_locale": "na",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+    ],
+    "type": "BATCHING_REDUCER.BATCH",
+  },
+  Object {
+    "payload": Object {
+      "languageCode": "na_NA",
+    },
+    "type": "@@localize/SET_ACTIVE_LANGUAGE",
+  },
+  Object {
+    "type": "@@tool/LOCALE_LOADED",
+  },
+]
+`;
+
+exports[`actions create an action to initialize the locale should use the system locale 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "languages": Array [
+        Object {
+          "code": "en_US",
+          "name": "English",
+        },
+        Object {
+          "code": "en",
+          "name": "English",
+        },
+        Object {
+          "code": "na_NA",
+          "name": "Name",
+        },
+        Object {
+          "code": "na",
+          "name": "Name",
+        },
+      ],
+      "options": Object {
+        "defaultLanguage": "en_US",
+        "missingTranslationCallback": [Function],
+      },
+    },
+    "type": "@@localize/INITIALIZE",
+  },
+  Object {
+    "meta": Object {
+      "batch": true,
+    },
+    "payload": Array [
+      Object {
+        "payload": Object {
+          "language": "en_US",
+          "translation": Object {
+            "_": Object {
+              "language_name": "English",
+              "locale": "en_US",
+              "short_locale": "en",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "en",
+          "translation": Object {
+            "_": Object {
+              "language_name": "English",
+              "locale": "en_US",
+              "short_locale": "en",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "na_NA",
+          "translation": Object {
+            "_": Object {
+              "language_name": "Name",
+              "locale": "na_NA",
+              "short_locale": "na",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+      Object {
+        "payload": Object {
+          "language": "na",
+          "translation": Object {
+            "_": Object {
+              "language_name": "Name",
+              "locale": "na_NA",
+              "short_locale": "na",
+            },
+          },
+        },
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
+      },
+    ],
+    "type": "BATCHING_REDUCER.BATCH",
+  },
+  Object {
+    "payload": Object {
+      "languageCode": "en_US",
+    },
+    "type": "@@localize/SET_ACTIVE_LANGUAGE",
+  },
+  Object {
+    "type": "@@tool/LOCALE_LOADED",
+  },
+]
+`;
