@@ -9,6 +9,7 @@ import osLocale from 'os-locale';
 import _ from 'lodash';
 import * as types from './types';
 import {getLanguages, getTranslations} from '../reducers';
+import {batchActions} from 'redux-batched-actions';
 
 const DEFAULT_LOCALE = 'en_US';
 
@@ -133,12 +134,13 @@ export const loadLocalization = (localeDir, appLanguage = null) => {
       defaultLanguage: DEFAULT_LOCALE,
       missingTranslationCallback: onMissingTranslation
     }));
+    const addTranslationActions = [];
     for (const languageCode in translations) {
       if (translations.hasOwnProperty(languageCode)) {
-        dispatch(
-          addTranslationForLanguage(translations[languageCode], languageCode));
+        addTranslationActions.push(addTranslationForLanguage(translations[languageCode], languageCode));
       }
     }
+    dispatch(batchActions(addTranslationActions));
     if (appLanguage !== DEFAULT_LOCALE) {
       setActiveLocale(dispatch, appLanguage, languages, translations);
     }
