@@ -130,6 +130,7 @@ export const loadLocalization = (localeDir, appLanguage = null) => {
         name: translations[code]['_']['language_name']
       };
     });
+    console.log('namedLanguages', namedLanguages);
     dispatch(initialize(namedLanguages, {
       defaultLanguage: DEFAULT_LOCALE,
       missingTranslationCallback: onMissingTranslation
