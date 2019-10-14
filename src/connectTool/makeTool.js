@@ -30,11 +30,6 @@ export const makeTool = (
       super(props);
       this.handleChange = this.handleChange.bind(this);
       this.toolDidUpdate = this.toolDidUpdate.bind(this);
-       this.state = {	
-        broken: false,	
-        error: null,	
-        info: null	
-      };
     }
 
     componentWillMount() {
