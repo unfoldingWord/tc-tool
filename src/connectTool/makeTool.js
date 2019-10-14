@@ -25,11 +25,6 @@ export const makeTool = (
     return !hasLocale || getLocaleLoaded(store.getState());
   };
 
-  // console.log('createProvider', createProvider);
-  // // TRICKY: this will overwrite the default store context key
-  // // thus removing direct access to tC core's store which also uses the default key.
-  // const Provider = createProvider();
-
   class Tool extends React.Component {
     constructor(props) {
       super(props);
@@ -83,24 +78,12 @@ export const makeTool = (
     }
 
      componentDidCatch(error, info) {
-      console.log('componentDidCatch maketool');
-      this.setState({	
-        broken: true,	
-        error,	
-        info	
-      });
+       console.error(error);
+       console.info(info);
     }
 
     render() {
-      const {broken, error, info} = this.state;	
-      if (broken) {	
-        return (	
-          <div>
-            <div>{error}</div>	
-            <div>{info}</div>
-          </div>
-        );	
-      } else if (!isLocaleLoaded()) {
+      if (!isLocaleLoaded()) {
         // TODO: we could display a loading screen while the tool loads
         return null;
       } else {
