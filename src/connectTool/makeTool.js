@@ -1,9 +1,9 @@
 import React from 'react';
-import {createProvider} from 'react-redux';
 import PropTypes from 'prop-types';
-import {getLocaleLoaded} from '../state/reducers';
-import {loadLocalization, setActiveLocale} from '../state/actions/locale';
-import {makeToolProps} from './makeProps';
+import { Provider } from 'react-redux';
+import { getLocaleLoaded } from '../state/reducers';
+import { loadLocalization, setActiveLocale } from '../state/actions/locale';
+import { makeToolProps } from './makeProps';
 
 /**
  * Generates the tool component
@@ -24,10 +24,6 @@ export const makeTool = (
   const isLocaleLoaded = () => {
     return !hasLocale || getLocaleLoaded(store.getState());
   };
-
-  // TRICKY: this will overwrite the default store context key
-  // thus removing direct access to tC core's store which also uses the default key.
-  const Provider = createProvider();
 
   class Tool extends React.Component {
     constructor(props) {
@@ -74,6 +70,11 @@ export const makeTool = (
       if (hasLocale && nextProps.appLanguage !== this.props.appLanguage) {
         store.dispatch(setActiveLocale(nextProps.appLanguage));
       }
+    }
+
+     componentDidCatch(error, info) {
+       console.error(error);
+       console.info(info);
     }
 
     render() {

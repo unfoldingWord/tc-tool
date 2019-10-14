@@ -61,7 +61,7 @@ describe('props', () => {
   });
 
   test('with locale', () => {
-    global.console = { info: jest.fn() };
+    global.console = { warn: jest.fn(), info: jest.fn() };
     const ConnectedComponent = connectTool('tool', {localeDir})(TestComponent);
     const wrapper = mount(
       <ConnectedComponent.container writeProjectData={jest.fn()}
@@ -79,7 +79,7 @@ describe('props', () => {
   });
 
   test('missing app language', () => {
-    global.console = { error: jest.fn(), info: jest.fn() };
+    global.console = { error: jest.fn(), info: jest.fn(), warn: jest.fn() };
     const ConnectedComponent = connectTool('tool', {localeDir})(TestComponent);
     const wrapper = mount(
       <ConnectedComponent.container writeProjectData={jest.fn()}
