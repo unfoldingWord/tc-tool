@@ -72,11 +72,6 @@ export const makeTool = (
       }
     }
 
-     componentDidCatch(error, info) {
-       console.error(error);
-       console.info(info);
-    }
-
     render() {
       if (!isLocaleLoaded()) {
         // TODO: we could display a loading screen while the tool loads
