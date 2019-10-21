@@ -3,24 +3,30 @@
 exports[`actions create an action to initialize the locale should inject non-translatable strings 1`] = `
 Array [
   Object {
-    "payload": Array [
-      Object {
-        "code": "en_US",
-        "name": "English",
+    "payload": Object {
+      "languages": Array [
+        Object {
+          "code": "en_US",
+          "name": "English",
+        },
+        Object {
+          "code": "en",
+          "name": "English",
+        },
+        Object {
+          "code": "na_NA",
+          "name": "Name",
+        },
+        Object {
+          "code": "na",
+          "name": "Name",
+        },
+      ],
+      "options": Object {
+        "defaultLanguage": "en_US",
+        "missingTranslationCallback": [Function],
       },
-      Object {
-        "code": "en",
-        "name": "English",
-      },
-      Object {
-        "code": "na_NA",
-        "name": "Name",
-      },
-      Object {
-        "code": "na",
-        "name": "Name",
-      },
-    ],
+    },
     "type": "@@localize/INITIALIZE",
   },
   Object {
@@ -39,7 +45,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -52,7 +58,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -65,7 +71,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -78,7 +84,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
     ],
     "type": "BATCHING_REDUCER.BATCH",
@@ -92,24 +98,30 @@ Array [
 exports[`actions create an action to initialize the locale should not use the system locale 1`] = `
 Array [
   Object {
-    "payload": Array [
-      Object {
-        "code": "en_US",
-        "name": "English",
+    "payload": Object {
+      "languages": Array [
+        Object {
+          "code": "en_US",
+          "name": "English",
+        },
+        Object {
+          "code": "en",
+          "name": "English",
+        },
+        Object {
+          "code": "na_NA",
+          "name": "Name",
+        },
+        Object {
+          "code": "na",
+          "name": "Name",
+        },
+      ],
+      "options": Object {
+        "defaultLanguage": "en_US",
+        "missingTranslationCallback": [Function],
       },
-      Object {
-        "code": "en",
-        "name": "English",
-      },
-      Object {
-        "code": "na_NA",
-        "name": "Name",
-      },
-      Object {
-        "code": "na",
-        "name": "Name",
-      },
-    ],
+    },
     "type": "@@localize/INITIALIZE",
   },
   Object {
@@ -128,7 +140,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -141,7 +153,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -154,7 +166,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -167,7 +179,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
     ],
     "type": "BATCHING_REDUCER.BATCH",
@@ -181,24 +193,30 @@ Array [
 exports[`actions create an action to initialize the locale should use an equivalent locale 1`] = `
 Array [
   Object {
-    "payload": Array [
-      Object {
-        "code": "en_US",
-        "name": "English",
+    "payload": Object {
+      "languages": Array [
+        Object {
+          "code": "en_US",
+          "name": "English",
+        },
+        Object {
+          "code": "en",
+          "name": "English",
+        },
+        Object {
+          "code": "na_NA",
+          "name": "Name",
+        },
+        Object {
+          "code": "na",
+          "name": "Name",
+        },
+      ],
+      "options": Object {
+        "defaultLanguage": "en_US",
+        "missingTranslationCallback": [Function],
       },
-      Object {
-        "code": "en",
-        "name": "English",
-      },
-      Object {
-        "code": "na_NA",
-        "name": "Name",
-      },
-      Object {
-        "code": "na",
-        "name": "Name",
-      },
-    ],
+    },
     "type": "@@localize/INITIALIZE",
   },
   Object {
@@ -217,7 +235,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -230,7 +248,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -243,7 +261,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -256,7 +274,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
     ],
     "type": "BATCHING_REDUCER.BATCH",
@@ -276,24 +294,30 @@ Array [
 exports[`actions create an action to initialize the locale should use the system locale 1`] = `
 Array [
   Object {
-    "payload": Array [
-      Object {
-        "code": "en_US",
-        "name": "English",
+    "payload": Object {
+      "languages": Array [
+        Object {
+          "code": "en_US",
+          "name": "English",
+        },
+        Object {
+          "code": "en",
+          "name": "English",
+        },
+        Object {
+          "code": "na_NA",
+          "name": "Name",
+        },
+        Object {
+          "code": "na",
+          "name": "Name",
+        },
+      ],
+      "options": Object {
+        "defaultLanguage": "en_US",
+        "missingTranslationCallback": [Function],
       },
-      Object {
-        "code": "en",
-        "name": "English",
-      },
-      Object {
-        "code": "na_NA",
-        "name": "Name",
-      },
-      Object {
-        "code": "na",
-        "name": "Name",
-      },
-    ],
+    },
     "type": "@@localize/INITIALIZE",
   },
   Object {
@@ -312,7 +336,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -325,7 +349,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -338,7 +362,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
       Object {
         "payload": Object {
@@ -351,7 +375,7 @@ Array [
             },
           },
         },
-        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUAGE",
+        "type": "@@localize/ADD_TRANSLATION_FOR_LANGUGE",
       },
     ],
     "type": "BATCHING_REDUCER.BATCH",
