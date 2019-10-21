@@ -1,6 +1,6 @@
 {
   "name": "tc-tool",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A HOC that provides a tool interface with tC core",
   "main": "dist/index.js",
   "display": "library",
@@ -38,7 +38,6 @@
     "os-locale": "^3.1.0",
     "path-extra": "^4.2.1",
     "prop-types": "^15.6.0",
-    "react-localize-redux": "^2.15.1",
     "redux-batched-actions": "^0.4.1",
     "redux-logger": "^3.0.6",
     "redux-promise": "^0.6.0",
