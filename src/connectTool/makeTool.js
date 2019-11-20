@@ -35,7 +35,6 @@ export const makeTool = (
     componentWillMount() {
       const {appLanguage} = this.props;
       // TRICKY: if an api exists the locale will be loaded there.
-      console.log(`Tool.componentWillReceiveProps(${namespace}) - componentWillMount - hasLocale: ${hasLocale}, hasApi: ${!!hasApi},`);
       if (hasLocale && !hasApi) {
         store.dispatch(loadLocalization(localeDir, appLanguage));
       }
