@@ -35,6 +35,7 @@ export const makeTool = (
     componentWillMount() {
       const {appLanguage} = this.props;
       // TRICKY: if an api exists the locale will be loaded there.
+      console.log(`Tool.componentWillReceiveProps(${namespace}) - componentWillMount - hasLocale: ${hasLocale}, hasApi: ${!!hasApi},`);
       if (hasLocale && !hasApi) {
         store.dispatch(loadLocalization(localeDir, appLanguage));
       }
@@ -67,9 +68,9 @@ export const makeTool = (
     componentWillReceiveProps(nextProps) {
       // TODO: this is an anti-pattern. see https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
       // stay in sync with the application language
-      console.log(`componentWillReceiveProps(${namespace}) - hasLocale: ${hasLocale}, nextProps.appLanguage: ${nextProps.appLanguage}, this.props.appLanguage: ${this.props.appLanguage},`);
+      console.log(`Tool.componentWillReceiveProps(${namespace}) - hasLocale: ${hasLocale}, nextProps.appLanguage: ${nextProps.appLanguage}, this.props.appLanguage: ${this.props.appLanguage},`);
       if (hasLocale && nextProps.appLanguage !== this.props.appLanguage) {
-        console.log(`componentWillReceiveProps(${namespace}) - updating locale`);
+        console.log(`Tool.componentWillReceiveProps(${namespace}) - updating locale`);
         store.dispatch(setActiveLocale(nextProps.appLanguage));
       }
     }
