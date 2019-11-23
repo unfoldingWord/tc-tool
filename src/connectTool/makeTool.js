@@ -71,8 +71,9 @@ export const makeTool = (
       console.log(`Tool.componentWillReceiveProps(${namespace}) - hasLocale: ${hasLocale}, nextProps.appLanguage: ${nextProps.appLanguage}, this.props.appLanguage: ${this.props.appLanguage},`);
       if (hasLocale) {
         const currentLang = getActiveLanguage(store.getState());
-        console.log(`Tool.componentWillReceiveProps(${namespace}) - currentLang: ${currentLang}`);
-        if (nextProps.appLanguage !== currentLang) {
+        const langId = currentLang && currentLang.code;
+        console.log(`Tool.componentWillReceiveProps(${namespace}) - currentLang: ${langId}`);
+        if (nextProps.appLanguage !== langId) { // TRICKY: we are not comparing with this.props.appLanguage because this doesn't always get called when the lang changes
           console.log(`Tool.componentWillReceiveProps(${namespace}) - updating locale`);
           store.dispatch(setActiveLocale(nextProps.appLanguage));
         }
