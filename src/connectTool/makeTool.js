@@ -68,13 +68,10 @@ export const makeTool = (
     componentWillReceiveProps(nextProps) {
       // TODO: this is an anti-pattern. see https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
       // stay in sync with the application language
-      console.log(`Tool.componentWillReceiveProps(${namespace}) - hasLocale: ${hasLocale}, nextProps.appLanguage: ${nextProps.appLanguage}, this.props.appLanguage: ${this.props.appLanguage},`);
       if (hasLocale) {
         const currentLang = getActiveLanguage(store.getState());
         const langId = currentLang && currentLang.code;
-        console.log(`Tool.componentWillReceiveProps(${namespace}) - currentLang: ${langId}`);
         if (nextProps.appLanguage !== langId) { // TRICKY: we are not comparing with this.props.appLanguage because this doesn't always get called when the lang changes
-          console.log(`Tool.componentWillReceiveProps(${namespace}) - updating locale`);
           store.dispatch(setActiveLocale(nextProps.appLanguage));
         }
       }
