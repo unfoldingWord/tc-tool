@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { getLocaleLoaded } from '../state/reducers';
 import { loadLocalization, setActiveLocale } from '../state/actions/locale';
+import { getActiveLanguage } from '../state/reducers';
 import { makeToolProps } from './makeProps';
 
 /**
@@ -67,8 +68,12 @@ export const makeTool = (
     componentWillReceiveProps(nextProps) {
       // TODO: this is an anti-pattern. see https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
       // stay in sync with the application language
-      if (hasLocale && nextProps.appLanguage !== this.props.appLanguage) {
-        store.dispatch(setActiveLocale(nextProps.appLanguage));
+      if (hasLocale) {
+        const currentLang = getActiveLanguage(store.getState());
+        const langId = currentLang && currentLang.code;
+        if (nextProps.appLanguage !== langId) { // TRICKY: we are not comparing with this.props.appLanguage because this doesn't always get called when the lang changes
+          store.dispatch(setActiveLocale(nextProps.appLanguage));
+        }
       }
     }
 
