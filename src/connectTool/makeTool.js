@@ -1,10 +1,10 @@
 import React from 'react';
-import {createProvider} from 'react-redux';
 import PropTypes from 'prop-types';
-import BrokenScreen from '../BrokenScreen';
-import {getLocaleLoaded} from '../state/reducers';
-import {loadLocalization, setActiveLocale} from '../state/actions/locale';
-import {makeToolProps} from './makeProps';
+import { Provider } from 'react-redux';
+import { getLocaleLoaded } from '../state/reducers';
+import { loadLocalization, setActiveLocale } from '../state/actions/locale';
+import { getActiveLanguage } from '../state/reducers';
+import { makeToolProps } from './makeProps';
 
 /**
  * Generates the tool component
@@ -26,21 +26,11 @@ export const makeTool = (
     return !hasLocale || getLocaleLoaded(store.getState());
   };
 
-  // TRICKY: this will overwrite the default store context key
-  // thus removing direct access to tC core's store which also uses the default key.
-  const Provider = createProvider();
-
   class Tool extends React.Component {
     constructor(props) {
       super(props);
       this.handleChange = this.handleChange.bind(this);
       this.toolDidUpdate = this.toolDidUpdate.bind(this);
-
-      this.state = {
-        broken: false,
-        error: null,
-        info: null
-      };
     }
 
     componentWillMount() {
@@ -75,31 +65,20 @@ export const makeTool = (
       this.forceUpdate();
     }
 
-    componentDidCatch(error, info) {
-      this.setState({
-        broken: true,
-        error,
-        info
-      });
-    }
-
     componentWillReceiveProps(nextProps) {
       // TODO: this is an anti-pattern. see https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
       // stay in sync with the application language
-      if (hasLocale && nextProps.appLanguage !== this.props.appLanguage) {
-        store.dispatch(setActiveLocale(nextProps.appLanguage));
+      if (hasLocale) {
+        const currentLang = getActiveLanguage(store.getState());
+        const langId = currentLang && currentLang.code;
+        if (nextProps.appLanguage !== langId) { // TRICKY: we are not comparing with this.props.appLanguage because this doesn't always get called when the lang changes
+          store.dispatch(setActiveLocale(nextProps.appLanguage));
+        }
       }
     }
 
     render() {
-      const {broken, error, info} = this.state;
-      if (broken) {
-        return (
-          <BrokenScreen title="ERROR"
-                        error={error}
-                        info={info}/>
-        );
-      } else if (!isLocaleLoaded()) {
+      if (!isLocaleLoaded()) {
         // TODO: we could display a loading screen while the tool loads
         return null;
       } else {

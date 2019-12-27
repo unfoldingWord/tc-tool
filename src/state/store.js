@@ -3,6 +3,7 @@ import promise from 'redux-promise';
 import thunk from 'redux-thunk';
 import internalReducer from './reducers/index';
 import { createLogger } from 'redux-logger';
+import { enableBatching } from 'redux-batched-actions';
 
 /**
  * Returns a configured store object.
@@ -23,7 +24,7 @@ export const configureStore = (reducer=null, middlewares=[]) => {
   });
 
   return createStore(
-    reducers,
+    enableBatching(reducers),
     undefined,
     applyMiddleware(...mw)
   );

@@ -61,7 +61,7 @@ describe('props', () => {
   });
 
   test('with locale', () => {
-    global.console = { info: jest.fn() };
+    global.console = { warn: jest.fn(), info: jest.fn() };
     const ConnectedComponent = connectTool('tool', {localeDir})(TestComponent);
     const wrapper = mount(
       <ConnectedComponent.container writeProjectData={jest.fn()}
@@ -79,7 +79,7 @@ describe('props', () => {
   });
 
   test('missing app language', () => {
-    global.console = { error: jest.fn(), info: jest.fn() };
+    global.console = { error: jest.fn(), info: jest.fn(), warn: jest.fn() };
     const ConnectedComponent = connectTool('tool', {localeDir})(TestComponent);
     const wrapper = mount(
       <ConnectedComponent.container writeProjectData={jest.fn()}
@@ -124,22 +124,4 @@ describe('snapshots', () => {
     );
     expect(wrapper).toMatchSnapshot();
   });
-
-  it('renders the error screen', () => {
-    global.console = { error: jest.fn(), info: jest.fn() };
-    const ConnectedComponent = connectTool('tool', {localeDir})(
-      BrokenComponent);
-    const wrapper = renderer.create(
-      <ConnectedComponent.container writeProjectData={jest.fn()}
-                                    readProjectData={jest.fn()}
-                                    readProjectDataSync={jest.fn()}
-                                    deleteProjectFile={jest.fn()}
-                                    projectDataPathExists={jest.fn()}
-                                    projectDataPathExistsSync={jest.fn()}
-                                    appLanguage="de_DE"/>
-    );
-    expect(wrapper).toMatchSnapshot();
-    expect(console.error).toBeCalled();
-  });
-
 });
