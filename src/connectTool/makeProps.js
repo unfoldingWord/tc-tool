@@ -43,7 +43,10 @@ class ToolProps {
     this._onToolDataPathExists = this._onToolDataPathExists.bind(this);
   }
 
+
   generate() {
+    console.log('ToolProps constructor props', this.props);
+
     const localeProps = this.hasLocale ? makeLocaleProps(this.state) : {};
     const toolIsReady = !isToolLoading(this.state);
     return {
