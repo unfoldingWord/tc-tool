@@ -101,10 +101,10 @@ export const loadLocalization = (localeDir, appLanguage = null) => {
       try {
         let translation = JSON.parse(fs.readFileSync(localeFile));
 
-        const nonTranslatablePath = path.join(localeDir, 'nonTranslatable.js');
+        const nonTranslatablePath = path.join(localeDir, 'nonTranslatable.json');
         let nonTranslatable = {};
         if (fs.existsSync(nonTranslatablePath)) {
-          nonTranslatable = require(nonTranslatablePath);
+          nonTranslatable = JSON.parse(fs.readFileSync(nonTranslatablePath));
         }
 
         translation = enhanceTranslation(translation, file, nonTranslatable);
