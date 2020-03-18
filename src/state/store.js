@@ -6,18 +6,20 @@ import { createLogger } from 'redux-logger';
 import { enableBatching } from 'redux-batched-actions';
 
 // TRICKY: this is to limit nesting in logging to prevent crashing console.log()
-const maxStateLevel = 6; // maximum depth for state logging
-const showFullDepth = false; // set this to true to display deep objects as JSON strings rather than ellipsis (warning this will run more slowly)
+const maxStateLevel = 5; // maximum depth for state logging
+const showFullDepth = true; // set this to true to display deep objects as JSON strings rather than ellipsis (warning this will run more slowly)
 const stateTransformer = (state, level = maxStateLevel) => {
   if (level <= 0) {
     return showFullDepth ? JSON.stringify(state) : "…"; // at this point replace with string to protect console.log() from objects too deep
   }
 
   let newState = {};
+  let keys = (typeof state === "object" && state !== null && Object.keys(state)) || [];
 
-  if (typeof state === "object" && state !== null && Object.keys(state).length) {
-    for (const i of Object.keys(state)) {
-      newState[i] = stateTransformer(state[i], level - 1);
+  if (keys.length) {
+    for (let i = 0, l = keys.length; i < l; i++) {
+      const key = keys[i];
+      newState[key] = stateTransformer(state[key], level - 1);
     }
   } else {
     newState = state;
