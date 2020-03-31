@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import ApiController from '../api/ApiController';
 import {makeTool} from './makeTool';
 import {version} from '../../package.json';
+import {setConfiguration} from '../state/configureReduxLogger';
 
 /**
  * Builds the locale tools
@@ -36,7 +37,8 @@ const connectTool = (namespace, options = {}) => {
    * @param {[]} [middlewares] - an array of middleware to inject into the store.
    * @param {*} [api] - The tool's api class
    */
-  const {localeDir = undefined, reducer = undefined, middlewares = undefined, api = undefined} = options;
+  const {localeDir = undefined, reducer = undefined, middlewares = undefined,
+    api = undefined, reduxLogger = undefined} = options;
 
   if (localeDir && typeof localeDir !== 'string') {
     throw Error(
@@ -52,6 +54,10 @@ const connectTool = (namespace, options = {}) => {
       console.error(`${namespace}: Could not find locale files in ${localeDir}`);
     }
 
+    if (reduxLogger) {
+      setConfiguration(reduxLogger);
+    }
+    
     const store = configureStore(reducer, middlewares);
 
     // wrap api in controller
