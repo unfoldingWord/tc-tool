@@ -82,6 +82,7 @@ export const loadLocalization = (localeDir, appLanguage = null) => {
     if (!fs.existsSync(localeDir)) {
       throw new Error(`Tool missing locale dir at ${localeDir}`);
     }
+    const nonTranslatableFile = 'nonTranslatable.json';
     const items = fs.readdirSync(localeDir);
     // load locale
     let languages = [];
@@ -97,14 +98,17 @@ export const loadLocalization = (localeDir, appLanguage = null) => {
         }
         continue;
       }
+      if (file === nonTranslatableFile) { // skip the non-translatable file
+        continue;
+      }
       const localeFile = path.join(localeDir, file);
       try {
         let translation = JSON.parse(fs.readFileSync(localeFile));
 
-        const nonTranslatablePath = path.join(localeDir, 'nonTranslatable.js');
+        const nonTranslatablePath = path.join(localeDir, nonTranslatableFile);
         let nonTranslatable = {};
         if (fs.existsSync(nonTranslatablePath)) {
-          nonTranslatable = require(nonTranslatablePath);
+          nonTranslatable = JSON.parse(fs.readFileSync(nonTranslatablePath));
         }
 
         translation = enhanceTranslation(translation, file, nonTranslatable);
