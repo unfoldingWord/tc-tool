@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import promise from 'redux-promise';
 import thunk from 'redux-thunk';
 import internalReducer from './reducers/index';
-// import { createLogger } from 'redux-logger';
+import { createLogger } from 'redux-logger';
 import { enableBatching } from 'redux-batched-actions';
 
 /**
@@ -15,10 +15,9 @@ import { enableBatching } from 'redux-batched-actions';
 export const configureStore = (reducer=null, middlewares=[]) => {
   const mw = [...middlewares, thunk, promise];
   
-  //TODO: currently see crash in current electron
-  // if (process.env.NODE_ENV === 'development') {
-  //   mw.push(createLogger());
-  // }
+  if (process.env.NODE_ENV === 'development') {
+    mw.push(createLogger());
+  }
 
   const reducers = combineReducers({
     internal:internalReducer,
