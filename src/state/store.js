@@ -14,6 +14,7 @@ import { enableBatching } from 'redux-batched-actions';
  */
 export const configureStore = (reducer=null, middlewares=[]) => {
   const mw = [...middlewares, thunk, promise];
+  
   if (process.env.NODE_ENV === 'development') {
     mw.push(createLogger());
   }
